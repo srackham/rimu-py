@@ -16,10 +16,14 @@ following exceptions:
 
 
 ## Usage
+Install from [PyPI](https://pypi.org/project/rimu/):
+
+    pip install rimu
+
 Example usage:
 
 ``` python
-import rimu;
+import rimu
 
 def main():
   print(rimu.render('Hello *Rimu*!'))
@@ -36,14 +40,16 @@ TODO: Run it using ...
 
 
 ## Building
+To build from source:
+
 1. Clone source repo from Github:
 
         git clone git@github.com:srackham/rimu-py.git
 
-2. Build and test:
+2. Test and build:
 
         cd rimu-py/
-        TODO
+        make build
 
 
 ## Learn more
