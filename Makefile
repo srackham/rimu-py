@@ -11,10 +11,33 @@ SHELL := bash
 .SILENT:
 
 
+.PHONY: test
+test:
+	# TODO
+
 .PHONY: build
-build:
+build: test
 	# Build binary and source distributions.
+	pip3 freeze > requirements.txt
 	python3 setup.py sdist bdist_wheel
+
+.PHONY: init
+init:
+	# Create virtual environment and install development dependencies.
+	if [ -d .venv ]; then
+		echo "Virtual environment .venv directory already exists."
+		exit 1
+	fi
+	python3 -m venv .venv
+	source ./.venv/bin/activate
+	pip3 install -r requirements.txt
+	# python3 -m pip  install --upgrade setuptools wheel twine pylint
+
+.PHONY: clean
+clean:
+	# Delete cache and intermediate files.
+	rm -rf $$(find ./src -type d -name '*.egg-info' -o -name __pycache__)
+	rm -rf ./build
 
 .PHONY: install
 install:
