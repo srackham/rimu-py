@@ -8,22 +8,27 @@ SHELL := bash
 .DELETE_ON_ERROR:
 .SUFFIXES:
 .ONESHELL:
-# .SILENT:
+.SILENT:
 
-# VERS is set to version number extracted from setup.py
-VERS := $$(sed -ne 's/\s*version="\([0-9.]*\)",.*/\1/p' setup.py)
+# VERS extracts the version number from setup.py
+VERS := $$(sed -ne 's/\s*version="\([0-9a-z.]*\)",.*/\1/p' setup.py)
 SRC_DIST := dist/rimu-$(VERS).tar.gz
 BIN_DIST := dist/rimu-$(VERS)-py3-none-any.whl
 
 .PHONY: test
 test:
-	PYTHONPATH=./src pytest tests/
+	vers=$(VERS)
+	if [ -z "$$vers" ]; then
+		echo setup.py: illegal version number
+		exit 1
+	fi
+	PYTHONPATH=./src pytest tests/ --quiet
 
 .PHONY: build
 # Build binary and source distributions.
 build: test
 	pip3 freeze > requirements.txt
-	python3 setup.py sdist bdist_wheel
+	python3 setup.py --quiet sdist bdist_wheel
 
 .PHONY: init
 # Create virtual environment and install development dependencies.
@@ -49,16 +54,18 @@ install:
 
 .PHONY: uninstall
 uninstall:
-	python3 -m pip uninstall -y -v rimu
+	python3 -m pip uninstall -y rimu
 
 .PHONY: tag
-tag:
-	git tag -a -m "v$(VERS)" v$(VERS)
+tag: test
+	tag=v$(VERS)
+	echo tag: $$tag
+	git tag -a -m $$tag $$tag
 
 .PHONY: push
-push:
+push: test
 	git push -u --tags origin master
 
 .PHONY: publish
-publish:
+publish: test
 	twine upload --repository-url https://test.pypi.org/legacy/ $(SRC_DIST) $(BIN_DIST)
