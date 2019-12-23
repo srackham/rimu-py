@@ -13,7 +13,7 @@ SHELL := bash
 
 .PHONY: test
 test:
-	# TODO
+	PYTHONPATH=./src pytest tests/
 
 .PHONY: build
 build: test
