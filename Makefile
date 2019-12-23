@@ -8,22 +8,26 @@ SHELL := bash
 .DELETE_ON_ERROR:
 .SUFFIXES:
 .ONESHELL:
-.SILENT:
+# .SILENT:
 
+# VERS is set to version number extracted from setup.py
+VERS := $$(sed -ne 's/\s*version="\([0-9.]*\)",.*/\1/p' setup.py)
+SRC_DIST := dist/rimu-$(VERS).tar.gz
+BIN_DIST := dist/rimu-$(VERS)-py3-none-any.whl
 
 .PHONY: test
 test:
 	PYTHONPATH=./src pytest tests/
 
 .PHONY: build
+# Build binary and source distributions.
 build: test
-	# Build binary and source distributions.
 	pip3 freeze > requirements.txt
 	python3 setup.py sdist bdist_wheel
 
 .PHONY: init
+# Create virtual environment and install development dependencies.
 init:
-	# Create virtual environment and install development dependencies.
 	if [ -d .venv ]; then
 		echo "Virtual environment .venv directory already exists."
 		exit 1
@@ -31,31 +35,30 @@ init:
 	python3 -m venv .venv
 	source ./.venv/bin/activate
 	pip3 install -r requirements.txt
-	# python3 -m pip  install --upgrade setuptools wheel twine pylint
 
 .PHONY: clean
+# Delete cache and intermediate files.
 clean:
-	# Delete cache and intermediate files.
 	rm -rf $$(find ./src -type d -name '*.egg-info' -o -name __pycache__)
 	rm -rf ./build
 
 .PHONY: install
+# Install local binary distribution.
 install:
-	# Install local binary distribution.
-	# TODO: install latest verison (extract version from setup.py, see go-rimu Makefile for example).
-	python3 -m pip install -v dist/rimu-0.0.1-py3-none-any.whl
+	python3 -m pip install -v $(BIN_DIST)
 
 .PHONY: uninstall
 uninstall:
-	# Uninstall distribution.
 	python3 -m pip uninstall -y -v rimu
 
-.PHONY: publish
-publish:
-	# TODO: install latest verison.
-	# Publish to TestPyPI.
-	twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+.PHONY: tag
+tag:
+	git tag -a -m "v$(VERS)" v$(VERS)
 
 .PHONY: push
 push:
 	git push -u --tags origin master
+
+.PHONY: publish
+publish:
+	twine upload --repository-url https://test.pypi.org/legacy/ $(SRC_DIST) $(BIN_DIST)
