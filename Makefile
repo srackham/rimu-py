@@ -22,7 +22,7 @@ test:
 		echo setup.py: illegal version number
 		exit 1
 	fi
-	PYTHONPATH=./src pytest tests/ --quiet
+	PYTHONPATH=./src pytest --quiet tests/
 
 .PHONY: build
 # Build binary and source distributions.
@@ -44,8 +44,9 @@ init:
 .PHONY: clean
 # Delete cache and intermediate files.
 clean:
-	rm -rf $$(find ./src -type d -name '*.egg-info' -o -name __pycache__)
+	rm -rf $$(find ./src ./tests -type d -name '*.egg-info' -o -name __pycache__)
 	rm -rf ./build
+	git gc --prune=now
 
 .PHONY: install
 # Install local binary distribution.
