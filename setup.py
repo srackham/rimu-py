@@ -8,6 +8,7 @@ setuptools.setup(
     version="0.0.1",
     author="Stuart Rackham",
     author_email="srackham@gmail.com",
+    license="MIT",
     description="Rimu is a readable-text to HTML markup language inspired by AsciiDoc and Markdown.",
     keywords="rimu markdown asciidoc",
     long_description=long_description,
