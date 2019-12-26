@@ -1,4 +1,3 @@
-# import rimu.options as options
 import rimu
 
 
