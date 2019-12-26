@@ -46,9 +46,17 @@ To build from source:
 
         git clone git@github.com:srackham/rimu-py.git
 
-2. Test and build:
+2. Create and initialize virtual environment:
 
         cd rimu-py/
+        make init
+
+3. Activate virtual environment:
+
+        source .venv/bin/activate
+
+4. Test and build:
+
         make build
 
 
