@@ -24,6 +24,11 @@ test:
 	fi
 	PYTHONPATH=./src pytest --quiet tests/
 
+.PHONY: repl
+# Open Python REPL.
+repl:
+	PYTHONPATH=./src python3
+
 .PHONY: build
 # Build binary and source distributions.
 build: test
