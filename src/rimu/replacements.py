@@ -1,6 +1,6 @@
 import re
-import rimu.options as options
-import rimu.utils as utils
+from rimu import options
+from rimu import utils
 
 
 class Def:
@@ -24,7 +24,7 @@ DEFAULT_DEFS = [
     # Replacement order is important.
 
     # DEPRECATED as of 3.4.0.
-    # Anchor: <<  # id>>
+    # Anchor: << #id>>
     Def(
         match=re.compile(r'\\?<<#([a-zA-Z][\w\-]*)>>'),
         replacement='<span id="$1"></span>',
@@ -32,13 +32,13 @@ DEFAULT_DEFS = [
             '' if options.skipBlockAttributes() else utils.replaceMatch(match, d.replacement)
     ),
 
-    # Image: < image: src | alt >
+    # Image: <image:src|alt>
     # src= $1, alt = $2
     Def(
         match=re.compile(r'\\?<image:([^\s|]+)\|(.*?)>', re.DOTALL),
         replacement='<img src="$1" alt="$2">'),
 
-    # Image: < image: src >
+    # Image: <image:src>
     # src= $1, alt = $1
     Def(
         match=re.compile(r'\\?<image:([^\s|]+?)>'),
@@ -50,13 +50,13 @@ DEFAULT_DEFS = [
         match=re.compile(r'\\?!\[([^[]*?)]\((\S+?)\)'),
         replacement='<img src="$2" alt="$1">'),
 
-    # Email: < address | caption >
+    # Email: <address|caption>
     # address= $1, caption = $2
     Def(
         match=re.compile(r'\\?<(\S+@[\w.\-]+)\|(.+?)>', re.DOTALL),
         replacement='<a href="mailto:$1">$$2</a>'),
 
-    # Email: < address >
+    # Email: <address>
     # address= $1, caption = $1
     Def(
         match=re.compile(r'\\?<(\S+@[\w.\-]+)>'),
@@ -68,7 +68,7 @@ DEFAULT_DEFS = [
         match=re.compile(r'\\?\[([^[]*?)]\((\S+?)\)'),
         replacement='<a href="$2">$$1</a>'),
 
-    # Link: < url | caption >
+    # Link: <url|caption>
     # url= $1, caption = $2
     Def(
         match=re.compile(r'\\?<(\S+?)\|(.*?)>', re.DOTALL),
@@ -85,7 +85,7 @@ DEFAULT_DEFS = [
         filter=lambda match, d: options.htmlSafeModeFilter(match[1])
     ),
 
-    # Link: < url >
+    # Link: <url>
     # url= $1
     Def(match=re.compile(r'\\?<([^|\s]+?)>'),
         replacement='<a href="$1">$1</a>'),

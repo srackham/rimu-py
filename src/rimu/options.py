@@ -1,5 +1,5 @@
-import rimu.api as api
-import rimu.utils as utils
+from rimu import api
+from rimu import utils
 
 # Global option values.
 safeMode = None

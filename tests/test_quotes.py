@@ -1,4 +1,4 @@
-import rimu.quotes as quotes
+from rimu import quotes
 
 
 def test_init():

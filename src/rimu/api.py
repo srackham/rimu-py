@@ -1,5 +1,5 @@
-import rimu
+from rimu import options
 
 
 def init():
-    rimu.options.init()
+    options.init()

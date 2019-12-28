@@ -1,5 +1,5 @@
 import re
-import rimu.replacements as replacements
+from rimu import replacements
 
 
 def test_init():
