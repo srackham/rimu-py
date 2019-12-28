@@ -33,7 +33,7 @@ unescapeRe = None  # Searches for escaped quotes.
 def init():
     '''Reset definitions to defaults.'''
     global defs
-    # Make shallow copy of DEFAULT_DEFS(list and list objects).
+    # Make shallow copy of DEFAULT_DEFS (list and list objects).
     defs = list(map(lambda d: Def.copyFrom(d), DEFAULT_DEFS))
     initializeRegExps()
 
