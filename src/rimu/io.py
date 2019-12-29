@@ -1,11 +1,13 @@
 import re
+from typing import Match, Optional, Pattern, List
 
 
 class Reader:
-    #   List<String> self.lines
-    #   int self.pos; # Line index of current line.
+    '''Rimu line oriented string reader.'''
+    lines: List[str]
+    pos: int    # Line index of current line.
 
-    def __init__(self, text):
+    def __init__(self, text: str):
         # Used internally by spans package.
         text = text.replace('\u0000', ' ')
         # Used internally by spans package.
@@ -19,25 +21,25 @@ class Reader:
         self.pos = 0
 
     @property
-    def cursor(self):
+    def cursor(self) -> str:
         assert not self.eof()
         return self.lines[self.pos]
 
     @cursor.setter
-    def cursor(self, value):
+    def cursor(self, value: str) -> None:
         assert not self.eof()
         self.lines[self.pos] = value
 
-    def eof(self):
+    def eof(self) -> bool:
         '''Return true if the cursor has advanced over all input self.lines.'''
         return self.pos >= len(self.lines)
 
-    def next(self):
+    def next(self) -> None:
         '''Move cursor to next input line.'''
         if (not self.eof()):
             self.pos += 1
 
-    def readTo(self, find):
+    def readTo(self, find: Pattern[str]) -> Optional[List[str]]:
         '''Read to the first line matching the re.
 
         Return the array of self.lines preceding the match plus a line containing
@@ -45,8 +47,9 @@ class Reader:
         Return null if an self.EOF is encountered.
         Exit with the reader pointing to the line following the match.'''
         result = []
+        # match: Optional[Match[str]] = None
         while (not self.eof()):
-            match = find.search(self.cursor)
+            match: Match[str] = find.search(self.cursor)
             if (match != None):
                 if (find.groups > 0):
                     result.append(match[1])  # $1
@@ -60,17 +63,22 @@ class Reader:
         else:
             return None
 
-    def skipBlankLines(self):
+    def skipBlankLines(self) -> None:
         while (not self.eof() and self.cursor.strip() == ''):
             self.next()
 
 
 class Writer:
+    '''Rimu line oriented string writer.'''
+    buffer: List[str]
+
     def __init__(self):
         self.buffer = []
 
-    def write(self, s):
-        self.buffer.append(s)
+    def write(self, line: str):
+        '''Write line.'''
+        self.buffer.append(line)
 
-    def toString(self):
+    def toString(self) -> str:
+        '''Return string of joined lines.'''
         return ''.join(self.buffer)
