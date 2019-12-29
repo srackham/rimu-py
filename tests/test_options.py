@@ -1,4 +1,4 @@
-import rimu.options as options
+from rimu import options
 from rimu.options import RenderOptions
 
 

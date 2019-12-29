@@ -1,16 +1,16 @@
 import re
-from rimu.io import *
+from rimu import io
 
 
 def test_Reader():
-    reader = Reader('')
+    reader = io.Reader('')
     assert reader.eof() == False
     assert len(reader.lines) == 1
     assert reader.cursor == ''
     reader.next()
     assert reader.eof() == True
 
-    reader = Reader('Hello\nWorld!')
+    reader = io.Reader('Hello\nWorld!')
     assert len(reader.lines) == 2
     assert reader.cursor == 'Hello'
     reader.next()
@@ -19,7 +19,7 @@ def test_Reader():
     reader.next()
     assert reader.eof() == True
 
-    reader = Reader('\n\nHello')
+    reader = io.Reader('\n\nHello')
     assert len(reader.lines) == 3
     reader.skipBlankLines()
     assert reader.cursor == 'Hello'
@@ -27,7 +27,7 @@ def test_Reader():
     reader.next()
     assert reader.eof() == True
 
-    reader = Reader('Hello\n*\nWorld!\nHello\n< Goodbye >')
+    reader = io.Reader('Hello\n*\nWorld!\nHello\n< Goodbye >')
     assert len(reader.lines) == 5
     lines = reader.readTo(re.compile(r'\*'))
     assert len(lines) == 1
@@ -38,7 +38,7 @@ def test_Reader():
     assert lines[2] == ' Goodbye '
     assert reader.eof() == True
 
-    reader = Reader('\n\nHello\nWorld!')
+    reader = io.Reader('\n\nHello\nWorld!')
     assert len(reader.lines) == 4
     reader.skipBlankLines()
     lines = reader.readTo(re.compile(r'^$'))
@@ -48,7 +48,7 @@ def test_Reader():
 
 
 def test_Writer():
-    writer = Writer()
+    writer = io.Writer()
     writer.write('Hello')
     assert writer.buffer[0] == 'Hello'
     writer.write('World!')
