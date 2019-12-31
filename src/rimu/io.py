@@ -39,8 +39,8 @@ class Reader:
         if (not self.eof()):
             self.pos += 1
 
-    def readTo(self, find: Pattern[str]) -> Optional[List[str]]:
-        '''Read to the first line matching the re.
+    def readTo(self, regexp: Pattern[str]) -> Optional[List[str]]:
+        '''Read to the first line matching the regexp.
 
         Return the array of self.lines preceding the match plus a line containing
         the $1 match group (if it exists).
@@ -49,16 +49,16 @@ class Reader:
         result = []
         match = None
         while (not self.eof()):
-            match = find.search(self.cursor)
+            match = regexp.search(self.cursor)
             if (match != None):
-                if (find.groups > 0):
+                if (regexp.groups > 0):
                     result.append(match[1])  # $1
                 self.next()
                 break
             result.append(self.cursor)
             self.next()
         # Blank line matches self.EOF.
-        if (match != None or (find.pattern == r'^$' and self.eof())):
+        if (match != None or (regexp.pattern == r'^$' and self.eof())):
             return result
         else:
             return None

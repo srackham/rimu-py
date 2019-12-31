@@ -35,12 +35,12 @@ def test_skipBlockAttributes():
     assert options.skipBlockAttributes() == True
 
 
-def test_updateOptions():
+def test_updateFrom():
     options.init()
-    options.updateOptions(RenderOptions(safeMode=1))
+    options.updateFrom(RenderOptions(safeMode=1))
     assert options.safeMode == 1
     assert options.htmlReplacement == '<mark>replaced HTML</mark>'
-    options.updateOptions(RenderOptions(htmlReplacement='foo'))
+    options.updateFrom(RenderOptions(htmlReplacement='foo'))
     assert options.safeMode == 1
     assert options.htmlReplacement == 'foo'
 

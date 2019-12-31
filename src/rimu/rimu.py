@@ -8,5 +8,5 @@ def render(source: str, opts: RenderOptions = RenderOptions()) -> str:
     # Implicit first-call API initialisation.
     if options.safeMode == -1:
         api.init()
-    options.updateOptions(opts)
+    options.updateFrom(opts)
     return api.render(source)

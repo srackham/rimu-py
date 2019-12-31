@@ -51,7 +51,7 @@ def skipBlockAttributes() -> bool:
     return (safeMode & 0x4) != 0
 
 
-def updateOptions(options: RenderOptions) -> None:
+def updateFrom(options: RenderOptions) -> None:
     ''' Update specified (non-null) options.'''
     global safeMode, htmlReplacement, callback
     # Install callback first to ensure option errors are logged.
