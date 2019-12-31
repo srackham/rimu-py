@@ -51,6 +51,7 @@ init:
 clean:
 	rm -rf $$(find ./src ./tests -type d -name '*.egg-info' -o -name __pycache__)
 	rm -rf ./build
+	rm -rf ./.pytest_cache
 	git gc --prune=now
 
 .PHONY: install
