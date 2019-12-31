@@ -1,54 +1,57 @@
 from rimu import api
 from rimu import utils
+from typing import Any, Callable, Optional
+
+Callback = Optional[Callable[[str, str], None]]
 
 # Global option values.
-safeMode = None
-htmlReplacement = None
-callback = None
+safeMode: int = -1  # Trigger API initialization.
+htmlReplacement: str
+callback: Callback = None
 
 
 class RenderOptions:
-    def __init__(self, safeMode=None, htmlReplacement=None, reset=None, callback=None):
+    '''Rimu render API options.'''
+    safeMode: Optional[int]
+    htmlReplacement: Optional[str]
+    reset: Optional[bool]
+    callback: Callback
+
+    def __init__(self, safeMode: int = None, htmlReplacement: str = None, reset: Any = None, callback: Callback = None):
         self.safeMode = safeMode
         self.htmlReplacement = htmlReplacement
         self.reset = reset
         self.callback = callback
 
 
-class CallbackMessage:
-    def __init__(self, type, text):
-        self.type = type
-        self.text = text
-
-
-def init():
-    '''Initialize globals.'''
+def init() -> None:
+    '''Initialize API render options.'''
     global safeMode, htmlReplacement, callback
     safeMode = 0
     htmlReplacement = '<mark>replaced HTML</mark>'
     callback = None
 
 
-def isSafeModeNz():
+def isSafeModeNz() -> bool:
     '''Return true if safeMode is non-zero.'''
     return safeMode != 0
 
 
-def getSafeMode():
+def getSafeMode() -> int:
     return safeMode
 
 
-def skipMacroDefs():
+def skipMacroDefs() -> bool:
     '''Return true if Macro Definitions are ignored.'''
     return safeMode != 0 and (safeMode & 0x8) == 0
 
 
-def skipBlockAttributes():
+def skipBlockAttributes() -> bool:
     '''Return true if Block Attribute elements are ignored.'''
     return (safeMode & 0x4) != 0
 
 
-def updateOptions(options):
+def updateOptions(options: RenderOptions) -> None:
     ''' Update specified (non-null) options.'''
     global safeMode, htmlReplacement, callback
     # Install callback first to ensure option errors are logged.
@@ -64,7 +67,7 @@ def updateOptions(options):
         setOption('htmlReplacement', options.htmlReplacement)
 
 
-def setOption(name, value):
+def setOption(name: str, value: Any) -> None:
     '''Set named option value.'''
     global safeMode, htmlReplacement, callback
     if name == 'safeMode':
@@ -85,12 +88,12 @@ def setOption(name, value):
         else:
             errorCallback('illegal reset API option value: ' + str(value))
     if name == 'htmlReplacement':
-        htmlReplacement = value
+        htmlReplacement = str(value)
     else:
         errorCallback('illegal API option name: ' + name)
 
 
-def htmlSafeModeFilter(html):
+def htmlSafeModeFilter(html: str) -> str:
     '''Filter HTML based on current safeMode.'''
     n = safeMode & 0x3
     if n == 0:    # Raw HTML (default behavior).
@@ -105,12 +108,12 @@ def htmlSafeModeFilter(html):
         return ''
 
 
-def errorCallback(message):
+def errorCallback(message: str) -> None:
     if callback != None:
-        callback(CallbackMessage('error', message))
+        callback('error', message)
 
 
-def panic(message):
+def panic(message: str) -> None:
     '''Called when an unexpected program error occurs.'''
     msg = 'panic: ' + message
     print(msg)

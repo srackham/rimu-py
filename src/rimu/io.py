@@ -47,9 +47,9 @@ class Reader:
         Return null if an self.EOF is encountered.
         Exit with the reader pointing to the line following the match.'''
         result = []
-        # match: Optional[Match[str]] = None
+        match = None
         while (not self.eof()):
-            match: Match[str] = find.search(self.cursor)
+            match = find.search(self.cursor)
             if (match != None):
                 if (find.groups > 0):
                     result.append(match[1])  # $1
@@ -75,7 +75,7 @@ class Writer:
     def __init__(self):
         self.buffer = []
 
-    def write(self, line: str):
+    def write(self, line: str) -> None:
         '''Write line.'''
         self.buffer.append(line)
 

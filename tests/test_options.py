@@ -3,7 +3,7 @@ from rimu.options import RenderOptions
 
 
 def test_init():
-    assert options.safeMode == None
+    assert options.safeMode == -1
     options.init()
     assert options.safeMode == 0
     assert options.htmlReplacement == '<mark>replaced HTML</mark>'
