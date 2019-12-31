@@ -7,3 +7,4 @@ dist/
 .venv/
 gitignore/
 .pytest_cache/
+pyrightconfig.json
