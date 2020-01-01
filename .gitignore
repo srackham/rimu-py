@@ -7,4 +7,5 @@ dist/
 .venv/
 gitignore/
 .pytest_cache/
+.mypy_cache/
 pyrightconfig.json
