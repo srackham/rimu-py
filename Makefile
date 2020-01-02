@@ -14,9 +14,11 @@ SHELL := bash
 VERS := $$(sed -ne 's/\s*version="\([0-9a-z.]*\)",.*/\1/p' setup.py)
 SRC_DIST := dist/rimu-$(VERS).tar.gz
 BIN_DIST := dist/rimu-$(VERS)-py3-none-any.whl
+RESOURCE_FILES = src/rimuc/resources/*
+RESOURCES_PY = src/rimuc/resources.py
 
 .PHONY: test
-test:
+test: resources
 	vers=$(VERS)
 	if [ -z "$$vers" ]; then
 		echo setup.py: illegal version number
@@ -34,6 +36,22 @@ repl:
 build: test
 	pip3 freeze > requirements.txt
 	python3 setup.py --quiet sdist bdist_wheel
+
+.PHONY: resources
+# Build resources file.
+resources: $(RESOURCES_PY)
+
+$(RESOURCES_PY): $(RESOURCE_FILES)
+	# Build resources.dart containing Map<filename,contents> of rimuc resource files.
+	echo "Building resources $@"
+	echo "# Generated automatically from resource files. Do not edit." > $@
+	echo "from typing import Dict" >> $@
+	echo "resources: Dict[str, str] = {" >> $@
+	for f in $^; do
+		echo -n "  '$$(basename $$f)': " >> $@
+		echo "r'''$$(cat $$f)'''," >> $@
+	done
+	echo "}" >> $@
 
 .PHONY: init
 # Create virtual environment and install development dependencies.

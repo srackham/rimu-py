@@ -1,5 +1,5 @@
 import sys
-from rimuc.rimuc import main
+import rimuc
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    rimuc.main()

@@ -81,13 +81,13 @@ def setOption(name: str, value: Any) -> None:
         else:
             safeMode = n
     elif name == 'reset':
-        if value == False or value == 'false':
+        if value == None or value == False or value == 'false':
             return
         elif value == True or value == 'true':
             api.init()
         else:
             errorCallback('illegal reset API option value: ' + str(value))
-    if name == 'htmlReplacement':
+    elif name == 'htmlReplacement':
         htmlReplacement = str(value)
     else:
         errorCallback('illegal API option name: ' + name)
