@@ -1,6 +1,4 @@
-from rimu import options
-from rimu import quotes
-from rimu import replacements
+from rimu import options, quotes, replacements
 
 
 def init():

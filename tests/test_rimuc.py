@@ -1,6 +1,8 @@
 import io
 import sys
+
 import pytest
+
 import rimuc
 
 

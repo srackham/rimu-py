@@ -1,6 +1,6 @@
-from rimu import api
-from rimu import utils
 from typing import Any, Callable, Optional
+
+from rimu import api, utils
 
 Callback = Optional[Callable[[str, str], None]]
 

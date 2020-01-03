@@ -1,6 +1,6 @@
 import re
-from rimu import options
-from rimu import utils
+
+from rimu import options, utils
 
 
 class Def:

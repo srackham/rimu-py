@@ -1,13 +1,14 @@
 import re
-import rimu.options as options
 from typing import Any
+
+from rimu import options
 
 
 class ExpansionOptions:
-    # Processing priority(highest to lowest): container, skip, spans and specials.
-    # If spans is true then both spans and specials are processed.
-    # They are assumed false if they are not explicitly defined.
-    # If a custom filter is specified their use depends on the filter.
+    '''Processing priority(highest to lowest): container, skip, spans and specials.
+       If spans is true then both spans and specials are processed.
+       They are assumed false if they are not explicitly defined.
+       If a custom filter is specified their use depends on the filter.'''
     macros: bool
     container: bool
     skip: bool

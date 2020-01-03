@@ -1,5 +1,5 @@
 import re
-from typing import Match, Optional, Pattern, List
+from typing import List, Match, Optional, Pattern
 
 
 class Reader:
