@@ -16,20 +16,31 @@ SRC_DIST := dist/rimu-$(VERS).tar.gz
 BIN_DIST := dist/rimu-$(VERS)-py3-none-any.whl
 RESOURCE_FILES = src/rimuc/resources/*
 RESOURCES_PY = src/rimuc/resources.py
+PYTHONPATH = ./src
 
 .PHONY: test
-test: resources
+test: resources lint
 	vers=$(VERS)
 	if [ -z "$$vers" ]; then
 		echo setup.py: illegal version number
 		exit 1
 	fi
-	PYTHONPATH=./src pytest --quiet tests/
+	echo pytest...
+	PYTHONPATH=$(PYTHONPATH) pytest --quiet tests
+
+.PHONY: lint
+# Open Python REPL.
+lint:
+	echo pylint...
+	pylint src tests
+	echo mypy...
+	#pylint --disable=all --enable=F,E,unreachable,duplicate-key,unnecessary-semicolon,global-variable-not-assigned,unused-variable,binary-op-exception,bad-format-string,anomalous-backslash-in-string,bad-open-mode src tests
+	mypy src tests
 
 .PHONY: repl
 # Open Python REPL.
 repl:
-	PYTHONPATH=./src python3
+	PYTHONPATH=$(PYTHONPATH) python3
 
 .PHONY: build
 # Build binary and source distributions.
@@ -48,7 +59,7 @@ $(RESOURCES_PY): $(RESOURCE_FILES)
 	echo "from typing import Dict" >> $@
 	echo "resources: Dict[str, str] = {" >> $@
 	for f in $^; do
-		echo -n "  '$$(basename $$f)': " >> $@
+		echo -n "    '$$(basename $$f)': " >> $@
 		echo "r'''$$(cat $$f)'''," >> $@
 	done
 	echo "}" >> $@
