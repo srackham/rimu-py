@@ -1,16 +1,10 @@
-# Minimal pylintrc (from https://stackoverflow.com/q/45018039)
-[MASTER]
-
-# Use multiple processes to speed up Pylint.
-jobs=1
-
+# pylint configuration based on VS Code default pylint rules.
+# See https://code.visualstudio.com/docs/python/linting#_default-pylint-rules
 
 [MESSAGES CONTROL]
-
-# Disable all then choose the Tests one by one.
+# Disable all then enable the tests one by one.
 disable=all
 
-# Tests:
 # Enable all Error (E) and Fatal (F) messages.
 # Disable all Convention (C) and Refactor (R) messages.
 # Disable all Warning (W) messages except the following:
@@ -23,14 +17,11 @@ disable=all
 #     bad-format-string (W1302): Invalid format string
 #     anomalous-backslash-in-string (W1401): Anomalous backslash in string
 #     bad-open-mode (W1501): "%s" is not a valid mode for open
-
 enable=F,E,unreachable,duplicate-key,unnecessary-semicolon,global-variable-not-assigned,unused-variable,
        binary-op-exception,bad-format-string,anomalous-backslash-in-string,bad-open-mode
 
-
 [REPORTS]
-
-# Tells whether to display a full report or only the messages
+# Tells whether to display a full report or only the messages.
 reports=no
 
 # Activate the evaluation score.

@@ -34,9 +34,11 @@ See also Rimu
 
 
 ## CLI command
-The [Rimu CLI command](https://srackham.github.io/rimu/reference.html#rimuc-command) is `rimupy`.
+The [Rimu CLI
+command](https://srackham.github.io/rimu/reference.html#rimuc-command) installed
+by Pipkis `rimupy`.
 
-TODO: Run it using ...
+You could also run it with `python3 -m rimuc`.
 
 
 ## Building
