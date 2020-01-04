@@ -1,22 +1,27 @@
 import re
+from typing import List, Pattern
 
 
 class Def:
+    quote: str
+    opentTag: str
+    closeTag: str
+    spans: bool
 
-    def __init__(self, quote, openTag, closeTag, spans):
+    def __init__(self, quote: str, openTag: str, closeTag: str, spans: bool) -> None:
         self.quote = quote
         self.openTag = openTag
         self.closeTag = closeTag
         self.spans = spans
 
     @classmethod
-    def copyFrom(cls, d):
+    def copyFrom(cls, d: 'Def') -> 'Def':
         return Def(d.quote, d.openTag, d.closeTag, d.spans)
 
 
-defs = []  # Mutable definitions initialized by DEFAULT_DEFS.
+defs: List[Def] = []  # Mutable definitions initialized by DEFAULT_DEFS.
 
-DEFAULT_DEFS = [
+DEFAULT_DEFS: List[Def] = [
     Def(quote='**', openTag='<strong>', closeTag='</strong>', spans=True),
     Def(quote='*', openTag='<em>', closeTag='</em>', spans=True),
     Def(quote='__', openTag='<strong>', closeTag='</strong>', spans=True),
@@ -26,19 +31,20 @@ DEFAULT_DEFS = [
     Def(quote='~~', openTag='<del>', closeTag='</del>', spans=True),
 ]
 
-quotesRe = None  # Searches for quoted text.
-unescapeRe = None  # Searches for escaped quotes.
+quotesRe: Pattern[str] = None  # Searches for quoted text.
+unescapeRe: Pattern[str] = None  # Searches for escaped quotes.
 
 
-def init():
+def init() -> None:
     '''Reset definitions to defaults.'''
     global defs
     # Make shallow copy of DEFAULT_DEFS (list and list objects).
-    defs = list(map(lambda d: Def.copyFrom(d), DEFAULT_DEFS))
+    defs.clear()
+    defs.extend(map(lambda d: Def.copyFrom(d), DEFAULT_DEFS))
     initializeRegExps()
 
 
-def initializeRegExps():
+def initializeRegExps() -> None:
     '''Synthesise re's to find and unescape quotes.'''
     global quotesRe, unescapeRe
     quotes = list(map(lambda d: re.escape(d.quote), defs))
@@ -52,7 +58,7 @@ def initializeRegExps():
     unescapeRe = re.compile(r'\\(' + '|'.join(quotes) + ')')
 
 
-def getDefinition(quote):
+def getDefinition(quote: str) -> Def:
     '''Return the quote definition corresponding to 'quote' character, return null if not found.'''
     found = list(filter(lambda d: d.quote == quote, defs))
     if len(found) == 0:
@@ -61,24 +67,24 @@ def getDefinition(quote):
         return found[0]
 
 
-def setDefinition(dfn):
+def setDefinition(qdef: Def) -> None:
     '''Update existing or add new quote definition.'''
-    d = getDefinition(dfn.quote)
+    d = getDefinition(qdef.quote)
     if d is not None:
         # Update existing definition.
-        d.openTag = dfn.openTag
-        d.closeTag = dfn.closeTag
-        d.spans = dfn.spans
+        d.openTag = qdef.openTag
+        d.closeTag = qdef.closeTag
+        d.spans = qdef.spans
     else:
         # Double-quote definitions are prepended to the array so they are matched
         # before single-quote definitions(which are appended to the array).
-        if len(dfn.quote) == 2:
-            defs.insert(0, dfn)
+        if len(qdef.quote) == 2:
+            defs.insert(0, qdef)
         else:
-            defs.append(dfn)
+            defs.append(qdef)
         initializeRegExps()
 
 
-def unescape(s):
+def unescape(s: str) -> str:
     '''Strip backslashes from quote characters.'''
     return unescapeRe.sub(lambda m: m[1], s)

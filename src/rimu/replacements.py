@@ -1,23 +1,29 @@
 import re
+from typing import Callable, List, Match, Optional, Pattern
 
 from rimu import options, utils
 
+Filter = Optional[Callable[[Match[str], 'Def'], str]]
+
 
 class Def:
+    match: Pattern[str]
+    replacement: str
+    filter: Filter
 
-    def __init__(self, match, replacement, filter=None):
+    def __init__(self, match: Pattern[str], replacement: str, filter: Filter = None):
         self.match = match
         self.replacement = replacement
         self.filter = filter
 
     @classmethod
-    def copyFrom(cls, d):
+    def copyFrom(cls, d: 'Def') -> 'Def':
         return Def(d.match, d.replacement, d.filter)
 
 
-defs = []  # Mutable definitions initialized by DEFAULT_DEFS.
+defs: List[Def] = []  # Mutable definitions initialized by DEFAULT_DEFS.
 
-DEFAULT_DEFS = [
+DEFAULT_DEFS: List[Def] = [
     # Begin match with \\? to allow the replacement to be escaped.
     # Global flag must be set on match re's so that the RegExp lastIndex property is set.
     # Replacements and special characters are expanded in replacement groups($1..).
@@ -120,14 +126,15 @@ DEFAULT_DEFS = [
 # Reset definitions to defaults.
 
 
-def init():
+def init() -> None:
     '''Reset definitions to defaults.'''
     global defs
     # Make shallow copy of DEFAULT_DEFS (list and list objects).
-    defs = list(map(lambda d: Def.copyFrom(d), DEFAULT_DEFS))
+    defs.clear()
+    defs.extend(map(lambda d: Def.copyFrom(d), DEFAULT_DEFS))
 
 
-def getDefinition(pattern):
+def getDefinition(pattern: str) -> Optional[Def]:
     '''Return the replacment definition matching the regular expresssion pattern, return null if not found.'''
     found = list(filter(lambda d: d.match.pattern == pattern, defs))
     if len(found) == 0:
@@ -136,7 +143,7 @@ def getDefinition(pattern):
         return found[0]
 
 
-def setDefinition(pattern, flags, replacement):
+def setDefinition(pattern: str, flags: str, replacement: str) -> None:
     '''Update existing or add new replacement definition.'''
     # Flag properties are read-only so have to create new RegExp.
     flgs = 0
