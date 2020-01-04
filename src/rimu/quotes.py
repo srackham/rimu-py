@@ -64,7 +64,7 @@ def getDefinition(quote):
 def setDefinition(dfn):
     '''Update existing or add new quote definition.'''
     d = getDefinition(dfn.quote)
-    if d != None:
+    if d is not None:
         # Update existing definition.
         d.openTag = dfn.openTag
         d.closeTag = dfn.closeTag

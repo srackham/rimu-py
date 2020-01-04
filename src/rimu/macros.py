@@ -79,7 +79,7 @@ def render(text: str, silent: bool = False) -> str:
                 return match[0]
             name = match[1]
             value = getValue(name)  # Macro value is null if macro is undefined.
-            if value == None:
+            if value is None:
                 if not silent:
                     options.errorCallback(f'undefined macro: {match[0]}: $text')
                 return match[0]

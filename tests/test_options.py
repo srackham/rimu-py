@@ -10,7 +10,7 @@ def test_init():
     options.init()
     assert options.safeMode == 0
     assert options.htmlReplacement == '<mark>replaced HTML</mark>'
-    assert options.callback == None
+    assert options.callback is None
 
 
 def test_isSafeModeNz():

@@ -50,7 +50,7 @@ class Reader:
         match = None
         while (not self.eof()):
             match = regexp.search(self.cursor)
-            if (match != None):
+            if (match is not None):
                 if (regexp.groups > 0):
                     result.append(match[1])  # $1
                 self.next()
@@ -58,7 +58,7 @@ class Reader:
             result.append(self.cursor)
             self.next()
         # Blank line matches self.EOF.
-        if (match != None or (regexp.pattern == r'^$' and self.eof())):
+        if (match is not None or (regexp.pattern == r'^$' and self.eof())):
             return result
         else:
             return None

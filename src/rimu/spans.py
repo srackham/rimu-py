@@ -69,7 +69,7 @@ def fragQuote(fragment: Fragment) -> List[Fragment]:
     nextIndex: int = 0
     while True:
         match = quotes.quotesRe.search(fragment.text, nextIndex)
-        if match == None:
+        if match is None:
             return [fragment]
         quote = match[1]
         # Check if quote is escaped.
@@ -155,7 +155,7 @@ def fragReplacement(fragment: Fragment,  rdef: replacements.Def) -> List[Fragmen
     if fragment.done:
         return [fragment]
     match = rdef.match.search(fragment.text)
-    if match == None:
+    if match is None:
         return [fragment]
     # Arrive here if we have a matched replacement.
     # The replacement splits the input fragment into 3 output fragments:
@@ -169,7 +169,7 @@ def fragReplacement(fragment: Fragment,  rdef: replacements.Def) -> List[Fragmen
         # Remove leading backslash.
         replacement = utils.replaceSpecialChars(match[0][1:])
     else:
-        if rdef.filter == None:
+        if rdef.filter is None:
             replacement = utils.replaceMatch(match, rdef.replacement)
         else:
             replacement = rdef.filter(match, rdef)

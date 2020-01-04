@@ -10,7 +10,7 @@ def test_parse():
     setValue('x', '1')
     assert len(defs) == 3
     assert getValue('x') == '1'
-    assert getValue('y') == None
+    assert getValue('y') is None
     assert render(r'\{x} = {x}') == '{x} = 1'
     assert render(r'{--=} foobar') == ' foobar'
     assert render(r'{--!} foobar') == ''

@@ -36,17 +36,17 @@ class ExpansionOptions:
         return ExpansionOptions().merge(other)
 
     def merge(self, other: 'ExpansionOptions') -> None:
-        if other == None:
+        if other is None:
             return
-        if other.macros != None:
+        if other.macros is not None:
             self.macros = other.macros
-        if other.container != None:
+        if other.container is not None:
             self.container = other.container
-        if other.skip != None:
+        if other.skip is not None:
             self.skip = other.skip
-        if other.spans != None:
+        if other.spans is not None:
             self.spans = other.spans
-        if other.specials != None:
+        if other.specials is not None:
             self.specials = other.specials
 
     def parse(self, opts: str) -> None:
@@ -56,7 +56,7 @@ class ExpansionOptions:
                 if options.isSafeModeNz() and opt == '-specials':
                     options.errorCallback('-specials block option not valid in safeMode')
                     continue
-                if re.match(r'^[+-](macros|spans|specials|container|skip)$', opt) != None:
+                if re.match(r'^[+-](macros|spans|specials|container|skip)$', opt) is not None:
                     value = opt[0] == '+'
                     if opt[1:] == 'macros':
                         self.macros = value

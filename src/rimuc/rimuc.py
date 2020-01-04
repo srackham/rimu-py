@@ -123,7 +123,7 @@ def main() -> None:
     output = ''
     errors = 0
     options = rimu.RenderOptions()
-    if html_replacement != None:
+    if html_replacement is not None:
         options.htmlReplacement = html_replacement
     for infile in files:
         source = ''

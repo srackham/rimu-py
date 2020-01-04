@@ -14,8 +14,8 @@ def test_init():
 def test_getDefinition():
     replacements.init()
     assert len(replacements.defs) == len(replacements.DEFAULT_DEFS)
-    assert replacements.getDefinition(r'\\?<image:([^\s|]+?)>') != None
-    assert replacements.getDefinition(r'X') == None
+    assert replacements.getDefinition(r'\\?<image:([^\s|]+?)>') is not None
+    assert replacements.getDefinition(r'X') is None
 
 
 def test_setDefinition():

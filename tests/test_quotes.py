@@ -12,8 +12,8 @@ def test_init():
 def test_getDefinition():
     quotes.init()
     assert len(quotes.defs) == len(quotes.DEFAULT_DEFS)
-    assert quotes.getDefinition('*') != None
-    assert quotes.getDefinition('X') == None
+    assert quotes.getDefinition('*') is not None
+    assert quotes.getDefinition('X') is None
 
 
 def test_setDefinition():

@@ -146,7 +146,7 @@ def setDefinition(pattern, flags, replacement):
         flgs |= re.MULTILINE
     regexp = re.compile(pattern, flgs)
     d = getDefinition(pattern)
-    if d != None:
+    if d is not None:
         # Update existing definition.
         d.match = regexp
         d.replacement = replacement

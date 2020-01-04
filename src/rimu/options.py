@@ -55,15 +55,15 @@ def updateFrom(options: RenderOptions) -> None:
     ''' Update specified (non-null) options.'''
     global safeMode, htmlReplacement, callback
     # Install callback first to ensure option errors are logged.
-    if callback != None:
+    if callback is not None:
         callback = options.callback
     setOption('reset', options.reset)  # Reset takes priority.
     # Install callback again in case it has been reset.
-    if options.callback != None:
+    if options.callback is not None:
         callback = options.callback
-    if options.safeMode != None:
+    if options.safeMode is not None:
         setOption('safeMode', str(options.safeMode))
-    if options.htmlReplacement != None:
+    if options.htmlReplacement is not None:
         setOption('htmlReplacement', options.htmlReplacement)
 
 
@@ -81,7 +81,7 @@ def setOption(name: str, value: Any) -> None:
         else:
             safeMode = n
     elif name == 'reset':
-        if value == None or value == False or value == 'false':
+        if value is None or value == False or value == 'false':
             return
         elif value == True or value == 'true':
             api.init()
@@ -109,7 +109,7 @@ def htmlSafeModeFilter(html: str) -> str:
 
 
 def errorCallback(message: str) -> None:
-    if callback != None:
+    if callback is not None:
         callback('error', message)
 
 

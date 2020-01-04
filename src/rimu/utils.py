@@ -13,7 +13,7 @@ def replaceMatch(match: Match, replacement: str, expansionOptions: ExpansionOpti
     '''Replace pattern '$1' or '$$1', '$2' or '$$2'... in `replacement` with corresponding match groups
        from `match`. If pattern starts with one '$' character add specials to `expansionOptions`,
        if it starts with two '$' characters add spans to `expansionOptions`.'''
-    if expansionOptions == None:
+    if expansionOptions is None:
         expansionOptions = ExpansionOptions()
 
     def repl(m):
