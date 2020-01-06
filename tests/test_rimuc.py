@@ -19,7 +19,7 @@ def execRimuc(capsys, monkeypatch=None, args=[], input=''):
     return capsys.readouterr(), exitcode
 
 
-def test_readResource(capsys):
+def test_readResource():
     # Throws exception if there is a missing resource file.
     for style in ['classic', 'flex', 'plain', 'sequel', 'v8']:
         rimuc.readResource(f'{style}-header.rmu')
@@ -45,6 +45,5 @@ def test_illegalLayout(capsys):
     assert captured.err.startswith('illegal --layout: foobar')
 
 
-def test_jsonTests(capsys, monkeypatch):
-    # TODO
-    pass
+# TODO
+# def test_jsonTests(capsys, monkeypatch):

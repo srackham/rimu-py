@@ -1,8 +1,9 @@
-# pylint configuration based on VS Code default pylint rules.
+# pylint configuration based on VS Code default pylint rules with the following
+# additional checks: unused-argument.
 # See https://code.visualstudio.com/docs/python/linting#_default-pylint-rules
 
 [MESSAGES CONTROL]
-# Disable all then enable the tests one by one.
+# Disable all default rules.
 disable=all
 
 # Enable all Error (E) and Fatal (F) messages.
@@ -17,12 +18,11 @@ disable=all
 #     bad-format-string (W1302): Invalid format string
 #     anomalous-backslash-in-string (W1401): Anomalous backslash in string
 #     bad-open-mode (W1501): "%s" is not a valid mode for open
+#     unused-argument (W0613): Unused argument %r
 enable=F,E,unreachable,duplicate-key,unnecessary-semicolon,global-variable-not-assigned,unused-variable,
-       binary-op-exception,bad-format-string,anomalous-backslash-in-string,bad-open-mode
+       binary-op-exception,bad-format-string,anomalous-backslash-in-string,bad-open-mode,
+       unused-argument
 
 [REPORTS]
-# Tells whether to display a full report or only the messages.
 reports=no
-
-# Activate the evaluation score.
 score=no
