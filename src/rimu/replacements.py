@@ -131,16 +131,16 @@ def init() -> None:
     global defs
     # Make shallow copy of DEFAULT_DEFS (list and list objects).
     defs.clear()
-    defs.extend(map(lambda d: Def.copyFrom(d), DEFAULT_DEFS))
+    for d in DEFAULT_DEFS:
+        defs.append(Def.copyFrom(d))
 
 
 def getDefinition(pattern: str) -> Optional[Def]:
     '''Return the replacment definition matching the regular expresssion pattern, return null if not found.'''
-    found = list(filter(lambda d: d.match.pattern == pattern, defs))
-    if len(found) == 0:
-        return None
-    else:
-        return found[0]
+    for d in defs:
+        if d.match.pattern == pattern:
+            return d
+    return None
 
 
 def setDefinition(pattern: str, flags: str, replacement: str) -> None:

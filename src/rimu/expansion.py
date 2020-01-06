@@ -16,7 +16,13 @@ class ExpansionOptions:
     # Span substitution also expands special characters.
     specials: bool
 
-    def __init__(self, macros: bool = None, container: bool = None, skip: bool = None, spans: bool = None, specials: bool = None):
+    def __init__(self,
+                 macros: bool = None,
+                 container: bool = None,
+                 skip: bool = None,
+                 spans: bool = None,
+                 specials: bool = None,
+                 ):
         self.macros = macros
         self.container = container
         self.skip = skip
@@ -32,8 +38,14 @@ class ExpansionOptions:
                 self.specials == obj.specials)
 
     @classmethod
-    def copyFrom(cls, other: 'ExpansionOptions'):
-        return ExpansionOptions().merge(other)
+    def copyFrom(cls, other: 'ExpansionOptions') -> 'ExpansionOptions':
+        return ExpansionOptions(
+            other.macros,
+            other.container,
+            other.skip,
+            other.spans,
+            other.specials,
+        )
 
     def merge(self, other: 'ExpansionOptions') -> None:
         if other is None:

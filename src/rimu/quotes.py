@@ -1,5 +1,5 @@
 import re
-from typing import List, Pattern
+from typing import List, Optional, Pattern
 
 
 class Def:
@@ -58,13 +58,12 @@ def initializeRegExps() -> None:
     unescapeRe = re.compile(r'\\(' + '|'.join(quotes) + ')')
 
 
-def getDefinition(quote: str) -> Def:
+def getDefinition(quote: str) -> Optional[Def]:
     '''Return the quote definition corresponding to 'quote' character, return null if not found.'''
-    found = list(filter(lambda d: d.quote == quote, defs))
-    if len(found) == 0:
-        return None
-    else:
-        return found[0]
+    for d in defs:
+        if d.quote == quote:
+            return d
+    return None
 
 
 def setDefinition(qdef: Def) -> None:
