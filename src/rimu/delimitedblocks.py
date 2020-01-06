@@ -14,7 +14,7 @@ DelimiterFilter = Optional[Callable[[Match[str], 'Def'], str]]  # Return filtere
 ContentFilter = Optional[Callable[[str, Match[str], ExpansionOptions], str]]
 
 
-def delimiterTextFilter(match: Match[str], _: 'Def') -> str:
+def openingDelimiterFilter(match: Match[str], _) -> str:
     '''delimiterFilter that returns opening delimiter line text from match group $1.'''
     return match[1]
 
@@ -39,7 +39,7 @@ def macroDefContentFilter(text: str, match: Match[str], expand: ExpansionOptions
     return ''
 
 
-def indentedContentFilter(text: str, _: Match[str], __: ExpansionOptions) -> str:
+def indentedContentFilter(text: str, *_) -> str:
     '''Strip indent from start of each line.'''
     first_indent = re.search(r'\S', text).start()
     result = []
@@ -52,7 +52,7 @@ def indentedContentFilter(text: str, _: Match[str], __: ExpansionOptions) -> str
     return '\n'.join(result)
 
 
-def quoteParagraphContentFilter(text: str, _: Match[str], __: ExpansionOptions) -> str:
+def quoteParagraphContentFilter(text: str, *_) -> str:
     '''Strip leading > from start of each line and unescape escaped leading >.'''
     result = []
     for line in text.split('\n'):
@@ -75,15 +75,15 @@ class Def:
     expand: ExpansionOptions
 
     def __init__(self,
-                 name=None,
-                 openMatch=None,
-                 closeMatch=None,
-                 openTag=None,
-                 closeTag=None,
-                 verify=None,
-                 delimiterFilter=None,
-                 contentFilter=None,
-                 expand=None,
+                 name: str = None,
+                 openMatch: Pattern[str] = None,
+                 closeMatch: Pattern[str] = None,
+                 openTag: str = None,
+                 closeTag: str = None,
+                 verify: Verify = None,
+                 delimiterFilter: DelimiterFilter = None,
+                 contentFilter: ContentFilter = None,
+                 expand: ExpansionOptions = None,
                  ) -> None:
         self.name = name
         self.openMatch = openMatch
@@ -122,7 +122,7 @@ DEFAULT_DEFS: List[Def] = [
         openTag='',
         closeTag='',
         expand=ExpansionOptions(macros=True),
-        delimiterFilter=delimiterTextFilter,
+        delimiterFilter=openingDelimiterFilter,
         contentFilter=macroDefContentFilter,
     ),
     # Comment block.
@@ -192,8 +192,8 @@ DEFAULT_DEFS: List[Def] = [
             if match[2]
                 # Matched alphanumeric tag name.
                 else True,  # Matched HTML comment or doctype tag.
-        delimiterFilter=delimiterTextFilter,
-        contentFilter=lambda text, match, expand: options.htmlSafeModeFilter(text),
+        delimiterFilter=openingDelimiterFilter,
+        contentFilter=lambda text, *_: options.htmlSafeModeFilter(text),
     ),
     # Indented paragraph.
     Def(
@@ -203,7 +203,7 @@ DEFAULT_DEFS: List[Def] = [
         openTag='<pre><code>',
         closeTag='</code></pre>',
         expand=ExpansionOptions(macros=False, specials=True),
-        delimiterFilter=delimiterTextFilter,
+        delimiterFilter=openingDelimiterFilter,
         contentFilter=indentedContentFilter,
     ),
     # Quote paragraph.
@@ -218,7 +218,7 @@ DEFAULT_DEFS: List[Def] = [
             spans=True,
             specials=True  # Fall-back if spans is disabled.
         ),
-        delimiterFilter=delimiterTextFilter,
+        delimiterFilter=openingDelimiterFilter,
         contentFilter=quoteParagraphContentFilter,
     ),
     # Paragraph (lowest priority, cannot be escaped).
@@ -233,7 +233,7 @@ DEFAULT_DEFS: List[Def] = [
             spans=True,
             specials=True  # Fall-back if spans is disabled.
         ),
-        delimiterFilter=delimiterTextFilter),
+        delimiterFilter=openingDelimiterFilter),
 ]
 
 # Reset definitions to defaults.
