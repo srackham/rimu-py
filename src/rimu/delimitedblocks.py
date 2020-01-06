@@ -29,12 +29,12 @@ def classInjectionFilter(match: Match[str], d: 'Def') -> str:
     return ''
 
 
-def macroDefContentFilter(text: str, match: Match[str], expansionOptions: ExpansionOptions) -> str:
+def macroDefContentFilter(text: str, match: Match[str], expand: ExpansionOptions) -> str:
     '''contentFilter for multi-line macro definitions.'''
     name = re.search(r'^{([\w\-]+\??)}', match[0])[1]  # Extract macro name from opening delimiter.
     text = re.sub(r"' *\\\n", "'\n", text)  # Unescape line-continuations.
     text = re.sub(r"(' *[\\]+)\\\n", lambda match: f'{match[1]}\n', text)  # Unescape escaped line-continuations.
-    text = utils.replaceInline(text, expansionOptions)  # Expand macro invocations.
+    text = utils.replaceInline(text, expand)  # Expand macro invocations.
     macros.setValue(name, text)
     return ''
 
@@ -72,7 +72,7 @@ class Def:
     verify: Verify  # Additional match verification checks.
     delimiterFilter: DelimiterFilter  # Process opening delimiter. Return any delimiter content.
     contentFilter: ContentFilter
-    expansionOptions: ExpansionOptions
+    expand: ExpansionOptions
 
     def __init__(self,
                  name=None,
@@ -83,7 +83,7 @@ class Def:
                  verify=None,
                  delimiterFilter=None,
                  contentFilter=None,
-                 expansionOptions=None,
+                 expand=None,
                  ) -> None:
         self.name = name
         self.openMatch = openMatch
@@ -93,7 +93,7 @@ class Def:
         self.verify = verify
         self.delimiterFilter = delimiterFilter
         self.contentFilter = contentFilter
-        self.expansionOptions = expansionOptions
+        self.expand = expand
 
     @classmethod
     def copyFrom(cls, d: 'Def') -> 'Def':
@@ -106,7 +106,7 @@ class Def:
             d.verify,
             d.delimiterFilter,
             d.contentFilter,
-            ExpansionOptions.copyFrom(d.expansionOptions)
+            ExpansionOptions.copyFrom(d.expand)
         )
 
 
@@ -121,7 +121,7 @@ DEFAULT_DEFS: List[Def] = [
         closeMatch=macros.DEF_CLOSE,
         openTag='',
         closeTag='',
-        expansionOptions=ExpansionOptions(macros=True),
+        expand=ExpansionOptions(macros=True),
         delimiterFilter=delimiterTextFilter,
         contentFilter=macroDefContentFilter,
     ),
@@ -132,7 +132,7 @@ DEFAULT_DEFS: List[Def] = [
         closeMatch=re.compile(r'^\*+\/$'),
         openTag='',
         closeTag='',
-        expansionOptions=ExpansionOptions(
+        expand=ExpansionOptions(
             skip=True, specials=True  # Fall-back if skip is disabled.
         ),
     ),
@@ -143,7 +143,7 @@ DEFAULT_DEFS: List[Def] = [
             r'^\\?(\.{2,})([\w\s-]*)$'),  # $1 is delimiter text, $2 is optional class names.
         openTag='<div>',
         closeTag='</div>',
-        expansionOptions=ExpansionOptions(
+        expand=ExpansionOptions(
             container=True, specials=True  # Fall-back if container is disabled.
         ),
         delimiterFilter=classInjectionFilter,
@@ -155,7 +155,7 @@ DEFAULT_DEFS: List[Def] = [
             r'^\\?("{2,})([\w\s-]*)$'),  # $1 is delimiter text, $2 is optional class names.
         openTag='<blockquote>',
         closeTag='</blockquote>',
-        expansionOptions=ExpansionOptions(
+        expand=ExpansionOptions(
             container=True, specials=True  # Fall-back if container is disabled.
         ),
         delimiterFilter=classInjectionFilter,
@@ -167,7 +167,7 @@ DEFAULT_DEFS: List[Def] = [
             r'^\\?(-{2,}|`{2,})([\w\s-]*)$'),  # $1 is delimiter text, $2 is optional class names.
         openTag='<pre><code>',
         closeTag='</code></pre>',
-        expansionOptions=ExpansionOptions(macros=False, specials=True),
+        expand=ExpansionOptions(macros=False, specials=True),
         verify=lambda match:
             # The deprecated '-' delimiter does not support appended class names.
             not (match[1][0] == '-' and match[2].strip() != ''),
@@ -185,7 +185,7 @@ DEFAULT_DEFS: List[Def] = [
         closeMatch=re.compile(r'^$'),  # Blank line or EOF.
         openTag='',
         closeTag='',
-        expansionOptions=ExpansionOptions(macros=True),
+        expand=ExpansionOptions(macros=True),
         verify=lambda match:
             # Return False if the HTML tag is an inline (non-block) HTML tag.
                 MATCH_INLINE_TAG.search(match[2]) is not None
@@ -193,7 +193,7 @@ DEFAULT_DEFS: List[Def] = [
                 # Matched alphanumeric tag name.
                 else True,  # Matched HTML comment or doctype tag.
         delimiterFilter=delimiterTextFilter,
-        contentFilter=lambda text, match, expansionOptions: options.htmlSafeModeFilter(text),
+        contentFilter=lambda text, match, expand: options.htmlSafeModeFilter(text),
     ),
     # Indented paragraph.
     Def(
@@ -202,7 +202,7 @@ DEFAULT_DEFS: List[Def] = [
         closeMatch=re.compile(r'^$'),  # Blank line or EOF.
         openTag='<pre><code>',
         closeTag='</code></pre>',
-        expansionOptions=ExpansionOptions(macros=False, specials=True),
+        expand=ExpansionOptions(macros=False, specials=True),
         delimiterFilter=delimiterTextFilter,
         contentFilter=indentedContentFilter,
     ),
@@ -213,7 +213,7 @@ DEFAULT_DEFS: List[Def] = [
         closeMatch=re.compile(r'^$'),  # Blank line or EOF.
         openTag='<blockquote><p>',
         closeTag='</p></blockquote>',
-        expansionOptions=ExpansionOptions(
+        expand=ExpansionOptions(
             macros=True,
             spans=True,
             specials=True  # Fall-back if spans is disabled.
@@ -228,7 +228,7 @@ DEFAULT_DEFS: List[Def] = [
         closeMatch=re.compile(r'^$'),  # Blank line or EOF.
         openTag='<p>',
         closeTag='</p>',
-        expansionOptions=ExpansionOptions(
+        expand=ExpansionOptions(
             macros=True,
             spans=True,
             specials=True  # Fall-back if spans is disabled.
@@ -283,23 +283,23 @@ def render(reader: io.Reader, writer: io.Writer, allowed: List[str] = None) -> b
         else:
             lines.extend(content)
         # Calculate block expansion options.
-        expansionOptions = ExpansionOptions.copyFrom(d.expansionOptions)
-        expansionOptions.merge(blockattributes.opts)
+        expand = ExpansionOptions.copyFrom(d.expand)
+        expand.merge(blockattributes.opts)
         # Translate block.
-        if expansionOptions.skip is not True:
+        if expand.skip is not True:
             text = '\n'.join(lines)
             if d.contentFilter:
-                text = d.contentFilter(text, match, expansionOptions)
+                text = d.contentFilter(text, match, expand)
             opentag = d.openTag
             if d.name == 'html':
                 text = blockattributes.injectHtmlAttributes(text)
             else:
                 opentag = blockattributes.injectHtmlAttributes(opentag)
-            if expansionOptions.container:
+            if expand.container:
                 blockattributes.opts.container = None  # Consume before recursion.
                 text = api.render(text)
             else:
-                text = utils.replaceInline(text, expansionOptions)
+                text = utils.replaceInline(text, expand)
             closetag = d.closeTag
             if d.name == 'division' and opentag == '<div>':
                 # Drop div tags if the opening div has no attributes.
@@ -341,4 +341,4 @@ def setDefinition(name: str, value: str) -> None:
         d.openTag = match[1]
         d.closeTag = match[2]
     if match[3] is not None:
-        d.expansionOptions.parse(match[3])
+        d.expand.parse(match[3])
