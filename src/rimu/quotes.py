@@ -8,7 +8,12 @@ class Def:
     closeTag: str
     spans: bool
 
-    def __init__(self, quote: str, openTag: str, closeTag: str, spans: bool) -> None:
+    def __init__(self,
+                 quote: str,
+                 openTag: str,
+                 closeTag: str,
+                 spans: bool,
+                 ) -> None:
         self.quote = quote
         self.openTag = openTag
         self.closeTag = closeTag

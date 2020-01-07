@@ -17,7 +17,12 @@ class RenderOptions:
     reset: Optional[bool]
     callback: Callback
 
-    def __init__(self, safeMode: int = None, htmlReplacement: str = None, reset: Any = None, callback: Callback = None):
+    def __init__(self,
+                 safeMode: int = None,
+                 htmlReplacement: str = None,
+                 reset: Any = None,
+                 callback: Callback = None,
+                 ):
         self.safeMode = safeMode
         self.htmlReplacement = htmlReplacement
         self.reset = reset

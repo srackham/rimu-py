@@ -11,7 +11,11 @@ class Def:
     replacement: str
     filter: Filter
 
-    def __init__(self, match: Pattern[str], replacement: str, filter: Filter = None):
+    def __init__(self,
+                 match: Pattern[str],
+                 replacement: str,
+                 filter: Filter = None,
+                 ):
         self.match = match
         self.replacement = replacement
         self.filter = filter

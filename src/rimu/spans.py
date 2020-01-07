@@ -23,7 +23,11 @@ class Fragment:
     done: bool
     verbatim: str  # Replacements text rendered verbatim.
 
-    def __init__(self, text: str, done: bool, verbatim: str = ''):
+    def __init__(self,
+                 text: str,
+                 done: bool,
+                 verbatim: str = '',
+                 ):
         self.text = text
         self.done = done
         self.verbatim = verbatim
