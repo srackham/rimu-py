@@ -31,7 +31,9 @@ def classInjectionFilter(match: Match[str], d: 'Def') -> str:
 
 def macroDefContentFilter(text: str, match: Match[str], expand: ExpansionOptions) -> str:
     '''contentFilter for multi-line macro definitions.'''
-    name = re.search(r'^{([\w\-]+\??)}', match[0])[1]  # Extract macro name from opening delimiter.
+    m = re.search(r'^{([\w\-]+\??)}', match[0])  # Extract macro name from opening delimiter.
+    assert m is not None
+    name = m[1]
     text = re.sub(r"' *\\\n", "'\n", text)  # Unescape line-continuations.
     text = re.sub(r"(' *[\\]+)\\\n", lambda match: f'{match[1]}\n', text)  # Unescape escaped line-continuations.
     text = utils.replaceInline(text, expand)  # Expand macro invocations.
@@ -41,11 +43,15 @@ def macroDefContentFilter(text: str, match: Match[str], expand: ExpansionOptions
 
 def indentedContentFilter(text: str, *_) -> str:
     '''Strip indent from start of each line.'''
-    first_indent = re.search(r'\S', text).start()
+    m = re.search(r'\S', text)
+    assert m is not None
+    first_indent = m.start()
     result = []
     for line in text.split('\n'):
         # Strip first line indent width or up to first non-space character.
-        indent = re.search(r'\S|$', line).start()
+        m = re.search(r'\S|$', line)
+        assert m is not None
+        indent = m.start()
         if indent > first_indent:
             indent = first_indent
         result.append(line[indent:])
@@ -64,50 +70,59 @@ def quoteParagraphContentFilter(text: str, *_) -> str:
 
 class Def:
     '''Multi-line block element definition.'''
-    name: str  # Optional unique identifier.
-    openMatch: Pattern[str]
-    closeMatch: Pattern[str]  # $1 (if defined) is appended to block content.
     openTag: str
     closeTag: str
+    openMatch: Pattern[str]
+    closeMatch: Pattern[str]  # $1 (if defined) is appended to block content.
     verify: Verify  # Additional match verification checks.
     delimiterFilter: DelimiterFilter  # Process opening delimiter. Return any delimiter content.
     contentFilter: ContentFilter
     expand: ExpansionOptions
+    name: str  # Optional unique identifier.
 
     def __init__(self,
-                 name: str = None,
-                 openMatch: Pattern[str] = None,
+                 openTag: str,
+                 closeTag: str,
+                 openMatch: Pattern[str],
                  closeMatch: Pattern[str] = None,
-                 openTag: str = None,
-                 closeTag: str = None,
                  verify: Verify = None,
                  delimiterFilter: DelimiterFilter = None,
                  contentFilter: ContentFilter = None,
                  expand: ExpansionOptions = None,
+                 name: str = '',
                  ) -> None:
-        self.name = name
-        self.openMatch = openMatch
-        self.closeMatch = closeMatch
         self.openTag = openTag
         self.closeTag = closeTag
+        self.openMatch = openMatch
+        if closeMatch is not None:
+            self.closeMatch = closeMatch
+        else:
+            self.closeMatch = self.openMatch
         self.verify = verify
         self.delimiterFilter = delimiterFilter
         self.contentFilter = contentFilter
-        self.expand = expand
+        if expand is not None:
+            self.expand = expand
+        else:
+            self.expand = ExpansionOptions()
+        self.name = name
 
     @classmethod
     def copyFrom(cls, d: 'Def') -> 'Def':
         return Def(
-            d.name,
-            d.openMatch,
-            d.closeMatch,
             d.openTag,
             d.closeTag,
+            d.openMatch,
+            d.closeMatch,
             d.verify,
             d.delimiterFilter,
             d.contentFilter,
-            ExpansionOptions.copyFrom(d.expand)
+            d.expand,
+            d.name,
         )
+        # if d.expand is not None:
+        # result.expand = ExpansionOptions.copyFrom(d.expand)
+        # return result
 
 
 defs: List[Def] = []  # Mutable definitions initialized by DEFAULT_DEFS.

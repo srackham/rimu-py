@@ -1,10 +1,10 @@
 import io
 import os
 import sys
+from typing import List, Optional
+
 import rimu
 import rimuc
-from typing import List
-
 
 VERSION = '11.1.6'
 HOME_DIR = os.path.expanduser('~')
@@ -30,8 +30,8 @@ def main() -> None:
     STDIN = '-'
 
     # Command option values.
-    safe_mode: int = None
-    html_replacement: str = None
+    safe_mode: Optional[int] = None
+    html_replacement: Optional[str] = None
     layout: str = ''
     no_rimurc: bool = False
     prepend_files: List[str] = []

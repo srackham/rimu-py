@@ -13,7 +13,7 @@
 '''
 
 import re
-from typing import List, Match
+from typing import List, Match, Optional
 
 from rimu import quotes, replacements, utils
 
@@ -68,7 +68,7 @@ def fragQuote(fragment: Fragment) -> List[Fragment]:
         return [fragment]
     # Find first matched quote in fragment text.
     quote: str
-    match: Match
+    match: Optional[Match[str]]
     startIndex: int = 0
     nextIndex: int = 0
     while True:
@@ -89,6 +89,7 @@ def fragQuote(fragment: Fragment) -> List[Fragment]:
     # The quote splits the input fragment into 5 or more output fragments:
     # Text before the quote, left quote tag, quoted text, right quote tag and text after the quote.
     qdef = quotes.getDefinition(match[1])
+    assert qdef is not None
     # Check for same closing quote one character further to the right.
     quoted = match[2]
     while nextIndex < len(fragment.text) and fragment.text[nextIndex] == quote[0]:

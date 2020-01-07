@@ -1,5 +1,5 @@
 import re
-from typing import Any
+from typing import Any, Optional
 
 from rimu import options
 
@@ -9,12 +9,12 @@ class ExpansionOptions:
        If spans is true then both spans and specials are processed.
        They are assumed false if they are not explicitly defined.
        If a custom filter is specified their use depends on the filter.'''
-    macros: bool
-    container: bool
-    skip: bool
-    spans: bool
+    macros: Optional[bool]
+    container: Optional[bool]
+    skip: Optional[bool]
+    spans: Optional[bool]
     # Span substitution also expands special characters.
-    specials: bool
+    specials: Optional[bool]
 
     def __init__(self,
                  macros: bool = None,

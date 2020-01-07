@@ -36,8 +36,8 @@ DEFAULT_DEFS: List[Def] = [
     Def(quote='~~', openTag='<del>', closeTag='</del>', spans=True),
 ]
 
-quotesRe: Pattern[str] = None  # Searches for quoted text.
-unescapeRe: Pattern[str] = None  # Searches for escaped quotes.
+quotesRe: Pattern[str]      # Searches for quoted text.
+unescapeRe: Pattern[str]    # Searches for escaped quotes.
 
 
 def init() -> None:

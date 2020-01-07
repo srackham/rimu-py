@@ -1,6 +1,7 @@
-from rimu import options, spans
 import re
-from typing import List
+from typing import List, Optional
+
+from rimu import options, spans
 
 # Matches a line starting with a macro invocation. $1 = macro invocation.
 MATCH_LINE = re.compile(r'^({(?:[\w\-]+)(?:[!=|?](?:|.*?[^\\]))?}).*$')
@@ -31,7 +32,7 @@ def init() -> None:
     defs.append(Macro('--header-ids'))
 
 
-def getValue(name: str) -> str:
+def getValue(name: str) -> Optional[str]:
     '''Return named macro value or null if it doesn't exist.'''
     for mdef in defs:
         if mdef.name == name:
