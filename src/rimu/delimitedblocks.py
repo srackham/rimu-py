@@ -8,7 +8,7 @@ MATCH_INLINE_TAG: Pattern[str] = re.compile(
     r'^(a|abbr|acronym|address|b|bdi|bdo|big|blockquote|br|cite|code|del|dfn|em|i|img|ins|kbd|mark|q|s|samp|small|span|strike|strong|sub|sup|time|tt|u|var|wbr)$',
     re.IGNORECASE)
 
-# Custom type annotation defintions.
+# Custom type defintions.
 Verify = Optional[Callable[[Match[str]], bool]]  # Additional match verification checks.
 DelimiterFilter = Optional[Callable[[Match[str], 'Def'], str]]  # Return filtered delimiter content.
 ContentFilter = Optional[Callable[[str, Match[str], ExpansionOptions], str]]

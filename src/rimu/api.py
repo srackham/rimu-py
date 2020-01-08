@@ -1,8 +1,12 @@
-from rimu import options, quotes, replacements
+from rimu import (blockattributes, delimitedblocks, macros, options, quotes,
+                  replacements)
 
 
 def init() -> None:
+    blockattributes.init()
     options.init()
+    delimitedblocks.init()
+    macros.init()
     quotes.init()
     replacements.init()
 
