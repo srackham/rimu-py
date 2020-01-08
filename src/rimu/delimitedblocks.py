@@ -14,60 +14,6 @@ DelimiterFilter = Optional[Callable[[Match[str], 'Def'], str]]  # Return filtere
 ContentFilter = Optional[Callable[[str, Match[str], ExpansionOptions], str]]
 
 
-def openingDelimiterFilter(match: Match[str], _) -> str:
-    '''delimiterFilter that returns opening delimiter line text from match group $1.'''
-    return match[1]
-
-
-def classInjectionFilter(match: Match[str], d: 'Def') -> str:
-    '''delimiterFilter for code, division and quote blocks.
-       Inject $2 into block class attribute, set close delimiter to $1.'''
-    p1 = match[2].strip()
-    if p1:
-        blockattributes.classes = p1
-    d.closeMatch = re.compile('^' + re.escape(match[1]) + r'$')
-    return ''
-
-
-def macroDefContentFilter(text: str, match: Match[str], expand: ExpansionOptions) -> str:
-    '''contentFilter for multi-line macro definitions.'''
-    m = re.search(r'^{([\w\-]+\??)}', match[0])  # Extract macro name from opening delimiter.
-    assert m is not None
-    name = m[1]
-    text = re.sub(r"' *\\\n", "'\n", text)  # Unescape line-continuations.
-    text = re.sub(r"(' *[\\]+)\\\n", lambda match: f'{match[1]}\n', text)  # Unescape escaped line-continuations.
-    text = utils.replaceInline(text, expand)  # Expand macro invocations.
-    macros.setValue(name, text)
-    return ''
-
-
-def indentedContentFilter(text: str, *_) -> str:
-    '''Strip indent from start of each line.'''
-    m = re.search(r'\S', text)
-    assert m is not None
-    first_indent = m.start()
-    result = []
-    for line in text.split('\n'):
-        # Strip first line indent width or up to first non-space character.
-        m = re.search(r'\S|$', line)
-        assert m is not None
-        indent = m.start()
-        if indent > first_indent:
-            indent = first_indent
-        result.append(line[indent:])
-    return '\n'.join(result)
-
-
-def quoteParagraphContentFilter(text: str, *_) -> str:
-    '''Strip leading > from start of each line and unescape escaped leading >.'''
-    result = []
-    for line in text.split('\n'):
-        line = re.sub(r'^>', '', line)
-        line = re.sub(r'^\\>', '>', line)
-        result.append(line)
-    return '\n'.join(result)
-
-
 class Def:
     '''Multi-line block element definition.'''
     openTag: str
@@ -120,9 +66,62 @@ class Def:
             d.expand,
             d.name,
         )
-        # if d.expand is not None:
-        # result.expand = ExpansionOptions.copyFrom(d.expand)
-        # return result
+
+
+# Filter and Verify functions.
+
+def openingDelimiterFilter(match: Match[str], _) -> str:
+    '''delimiterFilter that returns opening delimiter line text from match group $1.'''
+    return match[1]
+
+
+def classInjectionFilter(match: Match[str], d: Def) -> str:
+    '''delimiterFilter for code, division and quote blocks.
+       Inject $2 into block class attribute, set close delimiter to $1.'''
+    p1 = match[2].strip()
+    if p1:
+        blockattributes.classes = p1
+    d.closeMatch = re.compile('^' + re.escape(match[1]) + r'$')
+    return ''
+
+
+def macroDefContentFilter(text: str, match: Match[str], expand: ExpansionOptions) -> str:
+    '''contentFilter for multi-line macro definitions.'''
+    m = re.search(r'^{([\w\-]+\??)}', match[0])  # Extract macro name from opening delimiter.
+    assert m is not None
+    name = m[1]
+    text = re.sub(r"' *\\\n", "'\n", text)  # Unescape line-continuations.
+    text = re.sub(r"(' *[\\]+)\\\n", lambda match: f'{match[1]}\n', text)  # Unescape escaped line-continuations.
+    text = utils.replaceInline(text, expand)  # Expand macro invocations.
+    macros.setValue(name, text)
+    return ''
+
+
+def indentedContentFilter(text: str, *_) -> str:
+    '''Strip indent from start of each line.'''
+    m = re.search(r'\S', text)
+    assert m is not None
+    first_indent = m.start()
+    result = []
+    for line in text.split('\n'):
+        # Strip first line indent width or up to first non-space character.
+        m = re.search(r'\S|$', line)
+        assert m is not None
+        indent = m.start()
+        if indent > first_indent:
+            indent = first_indent
+        result.append(line[indent:])
+    return '\n'.join(result)
+
+
+def quoteParagraphContentFilter(text: str, *_) -> str:
+    '''Strip leading > from start of each line and unescape escaped leading >.'''
+    result = []
+    for line in text.split('\n'):
+        line = re.sub(r'^>', '', line)
+        line = re.sub(r'^\\>', '>', line)
+        result.append(line)
+    return '\n'.join(result)
 
 
 defs: List[Def] = []  # Mutable definitions initialized by DEFAULT_DEFS.
