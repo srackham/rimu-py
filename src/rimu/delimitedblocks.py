@@ -70,6 +70,16 @@ class Def:
 
 # Filter and Verify functions.
 
+def htmlVerify(match: Match[str]) -> bool:
+    '''Return False if the HTML tag is an inline (non-block) HTML tag.'''
+    if match[2]:
+        # Matched alphanumeric tag name.
+        return MATCH_INLINE_TAG.search(match[2]) is None
+    else:
+         # Matched HTML comment or doctype tag.
+        return True
+
+
 def openingDelimiterFilter(match: Match[str], _) -> str:
     '''delimiterFilter that returns opening delimiter line text from match group $1.'''
     return match[1]
@@ -200,12 +210,7 @@ DEFAULT_DEFS: List[Def] = [
         openTag='',
         closeTag='',
         expand=ExpansionOptions(macros=True),
-        verify=lambda match:
-            # Return False if the HTML tag is an inline (non-block) HTML tag.
-                MATCH_INLINE_TAG.search(match[2]) is not None
-            if match[2]
-                # Matched alphanumeric tag name.
-                else True,  # Matched HTML comment or doctype tag.
+        verify=htmlVerify,
         delimiterFilter=openingDelimiterFilter,
         contentFilter=lambda text, *_: options.htmlSafeModeFilter(text),
     ),

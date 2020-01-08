@@ -81,8 +81,8 @@ def fragQuote(fragment: Fragment) -> List[Fragment]:
             # Restart search after escaped opening quote.
             nextIndex += match.start() + len(quote) + 1
             continue
-        startIndex = nextIndex + match.start()
-        nextIndex += match.end()
+        startIndex = match.start()
+        nextIndex = match.end()
         break
     result: List[Fragment] = []
     # Arrive here if we have a matched quote.

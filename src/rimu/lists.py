@@ -85,7 +85,7 @@ def render(reader: io.Reader, writer: io.Writer) -> bool:
     ids = []
     renderList(startItem, reader, writer)
     # ids should now be empty.
-    if not ids:
+    if ids:
         options.panic('list stack failure')
     return True
 

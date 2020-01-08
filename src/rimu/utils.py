@@ -1,7 +1,7 @@
 import re
 from typing import Match
 
-from rimu import options, spans
+from rimu import macros, options, spans
 from rimu.expansion import ExpansionOptions
 
 
@@ -37,8 +37,7 @@ def replaceInline(text: str, expand: ExpansionOptions) -> str:
     '''Replace the inline elements specified in options in text and return the result.'''
     result = text
     if expand.macros:
-        # TODO: result = macros.render(result)
-        pass
+        result = macros.render(result)
     # Spans also expand special characters.
     if expand.spans:
         result = spans.render(result)
