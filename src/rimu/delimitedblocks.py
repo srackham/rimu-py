@@ -48,7 +48,7 @@ class Def:
         self.delimiterFilter = delimiterFilter
         self.contentFilter = contentFilter
         if expand is not None:
-            self.expand = expand
+            self.expand = ExpansionOptions.copyFrom(expand)
         else:
             self.expand = ExpansionOptions()
         self.name = name

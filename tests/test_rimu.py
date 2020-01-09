@@ -4,7 +4,7 @@ import rimu
 from rimu import options
 
 
-def unexpectedError(errtype, message):
+def unexpectedError(_, message):
     raise Exception(f'unexpected callback: {message}')
 
 
@@ -28,8 +28,9 @@ def test_jsonTests():
         renderOptions.reset = spec['options'].get('reset')
         msg = ''
 
-        def callback(message):
-            msg += f'{message.type}: {message.text}\n'  # pylint: disable=undefined-variable
+        def callback(msgtype, msgtext):
+            nonlocal msg
+            msg += f'{msgtype}: {msgtext}\n'
         # Captured callback message.
         if spec['expectedCallback'] or unsupported:
             renderOptions.callback = callback

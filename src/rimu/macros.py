@@ -82,7 +82,7 @@ def render(text: str, silent: bool = False) -> str:
             value = getValue(name)  # Macro value is null if macro is undefined.
             if value is None:
                 if not silent:
-                    options.errorCallback(f'undefined macro: {match[0]}: $text')
+                    options.errorCallback(f'undefined macro: {match[0]}: {text}')
                 return match[0]
             if find is MATCH_SIMPLE:
                 return value
@@ -110,14 +110,14 @@ def render(text: str, silent: bool = False) -> str:
                     # Unassigned parameters are replaced with a blank string.
                     param = '' if len(paramsList) < p2 else paramsList[p2 - 1]
                     if p3 != '':
-                        if p3.startsWith('\\'):
+                        if p3.startswith('\\'):
                             # Unescape escaped default parameter.
-                            param += p3.substring(1)
+                            param += p3[1:]
                         elif param == '':
                             # Assign default parameter value.
                             param = p4
                             # Unescape escaped $ characters in the default value.
-                            param = param.replaceAll(r'\$', r'$')
+                            param = param.replace(r'\$', r'$')
                     if p1 == r'$$':
                         param = spans.render(param)
                     return param
@@ -130,7 +130,7 @@ def render(text: str, silent: bool = False) -> str:
                     skip = re.match(f'^{pattern}$', value) is None
                 except:
                     if not silent:
-                        options.errorCallback(f'illegal macro regular expression: {pattern}: {text}.')
+                        options.errorCallback(f'illegal macro regular expression: {pattern}: {text}')
                     return match[0]
                 if params[0] == '!':
                     skip = not skip

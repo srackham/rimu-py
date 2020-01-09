@@ -149,7 +149,8 @@ def renderListItem(item: ItemInfo, reader: io.Reader, writer: io.Writer) -> Opti
         if blankLines == 0:
             savedIds = ids
             ids = []
-            if (delimitedblocks.render(reader, attachedLines, ['comment', 'code', 'division', 'html', 'quote'])):
+            if delimitedblocks.render(reader, attachedLines,
+                                      allowed=['comment', 'code', 'division', 'html', 'quote']):
                 attachedDone = True
             else:
                 # Item body line.
