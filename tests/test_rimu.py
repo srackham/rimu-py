@@ -28,9 +28,9 @@ def test_jsonTests():
         renderOptions.reset = spec['options'].get('reset')
         msg = ''
 
-        def callback(msgtype, msgtext):
+        def callback(severity, message):
             nonlocal msg
-            msg += f'{msgtype}: {msgtext}\n'
+            msg += f'{severity}: {message}\n'
         # Captured callback message.
         if spec['expectedCallback'] or unsupported:
             renderOptions.callback = callback

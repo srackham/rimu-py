@@ -24,24 +24,26 @@ def init() -> None:
 
 
 def parse(attrs: str) -> bool:
-    '''Parse Block Attributes.
-       class names = $1, id = $2, css-properties = $3, html-attributes = $4, block-options = $5'''
+    '''Parse Block Attributes line:
+       .class-names #id "css-properties" [html-attributes] block-options
+    '''
     global classes, id, css, attributes, opts, ids
     if options.skipBlockAttributes():
         return True
     text = attrs
     text = utils.replaceInline(text, Expand(macros=True))
 
-    # TODO: fix this kludge: Split regexp in two to fix catastrophic backtracking issue
-    # The peformance problem is this asterisk:       * <-- split regexp here.
-    # m = re.search(r'^\\?\.((?:\s*[a-zA-Z][\w\-]*)+)*(?:\s*)?(#[a-zA-Z][\w\-]*\s*)?(?:\s*)?(?:"(.+?)")?(?:\s*)?(\[.+])?(?:\s*)?([+-][ \w+-]+)?$', text)
-    # if m is None:
-    #    return False
+    # Kludge: The regexp is split in two to fix a catastrophic backtracking issue (without
+    # this split the match was taking around 5 seconds!).
+    # See https://unix.stackexchange.com/questions/419545/why-is-regular-expression-matching-so-slow
+    # Split re after this asterisk     * <-- split regexp here.
+    # r'^\\?\.((?:\s*[a-zA-Z][\w\-]*)+)*(?:\s*)?(#[a-zA-Z][\w\-]*\s*)?(?:\s*)?(?:"(.+?)")?(?:\s*)?(\[.+])?(?:\s*)?([+-][ \w+-]+)?$'
+    # class-names = $1, id = $2, css-properties = $3, html-attributes = $4, block-options = $5'''
     r1 = re.compile(r'^\\?\.((?:\s*[a-zA-Z][\w\-]*)+)*')
     m1 = r1.match(text)
     if m1 is None:
         return False
-    # Prefixed empty placeholder group () to maintain match indexes in m2.
+    # Prefixed empty placeholder group () to maintain group match indexes in m2.
     r2 = re.compile(r'()(?:\s*)?(#[a-zA-Z][\w\-]*\s*)?(?:\s*)?(?:"(.+?)")?(?:\s*)?(\[.+])?(?:\s*)?([+-][ \w+-]+)?$')
     m2 = r2.match(text[m1.end():])
     if m2 is None:

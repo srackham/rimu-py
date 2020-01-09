@@ -13,7 +13,7 @@ RIMURC = os.path.join(HOME_DIR, '.rimurc')
 
 def die(message: str = '') -> None:
     if message != '':
-        sys.stderr.write(message)
+        sys.stderr.write(message+'\n')
     raise SystemExit(1)
 
 
@@ -25,8 +25,8 @@ def readResource(name: str) -> str:
 
 def main() -> None:
     '''Process sys.argv command-line.'''
-    RESOURCE_TAG = 'resource:'  # Tag for resource files.
-    PREPEND = '--prepend options'
+    RESOURCE_TAG = 'resource:'  # Placeholder tag for resource files.
+    PREPEND_TAG = '--prepend options'    # Placeholder tag for prepend options.
     STDIN = '-'
 
     # Command option values.
@@ -80,15 +80,15 @@ def main() -> None:
             '--theme',
             '--title',
             '--lang',
-            '--toc'             # --toc deprecated in Rimu 8.0.0
+            '--toc',             # --toc deprecated in Rimu 8.0.0
             '--no-toc',
-            '--sidebar-toc'     # --sidebar-toc deprecated in Rimu 10.0.0
-            '--dropdown-toc'    # --dropdown-toc deprecated in Rimu 10.0.0
+            '--sidebar-toc',     # --sidebar-toc deprecated in Rimu 10.0.0
+            '--dropdown-toc',    # --dropdown-toc deprecated in Rimu 10.0.0
             '--custom-toc',
             '--header-ids',
                 '--header-links']:
             macro_value = popArg(arg) if arg in ['--lang', '--title', '--theme'] else 'true'
-            prepend += f"{arg}='{macro_value}'\n"
+            prepend += f"{{{arg}}}='{macro_value}'\n"
         elif arg in ['--layout', '--styled-name']:  # --styled-name' deprecated in Rimu 10.0.0
             layout = popArg(arg)
             if layout not in ['classic', 'flex', 'plain', 'sequel', 'v8']:
@@ -116,8 +116,8 @@ def main() -> None:
     # Prepend $HOME/.rimurc file if it exists.
     if not no_rimurc and os.path.isfile(RIMURC):
         prepend_files.insert(0, RIMURC)
-    if prepend != '':
-        prepend_files.append(PREPEND)
+    if prepend:
+        prepend_files.append(PREPEND_TAG)
     files = prepend_files + files
     # Convert Rimu source files to HTML.
     output = ''
@@ -128,13 +128,14 @@ def main() -> None:
     for infile in files:
         source = ''
         options.safeMode = safe_mode
+        ext = ''
         if infile.startswith(RESOURCE_TAG):
-            infile = infile[:len(RESOURCE_TAG)]
+            infile = infile[len(RESOURCE_TAG):]
             source = readResource(infile)
             options.safeMode = 0  # Resources are trusted.
         elif infile == STDIN:
             source = sys.stdin.read()
-        elif infile == PREPEND:
+        elif infile == PREPEND_TAG:
             source = prepend
             options.safeMode = 0  # --prepend options are trusted.
         else:
@@ -148,11 +149,12 @@ def main() -> None:
             if infile in prepend_files:
                 # Prepended and ~/.rimurc files are trusted.
                 options.safeMode = 0
+            ext = os.path.splitext(infile)[1]
         # Skip .html and pass-through inputs.
-        ext = os.path.splitext(infile)[1]
         if not (ext == '.html' or (pass_through and infile == STDIN)):
-            def callback(severity: str, description: str) -> None:
-                msg = f'{severity}: {"/dev/stdin" if infile == STDIN else infile}: {description}'
+            def callback(severity: str, message: str) -> None:
+                nonlocal errors
+                msg = f'{severity}: {"/dev/stdin" if infile == STDIN else infile}: {message}'
                 if len(msg) > 120:
                     msg = msg[:117] + '...'
                 sys.stderr.write(msg + '\n')
@@ -161,14 +163,13 @@ def main() -> None:
             options.callback = callback
             source = rimu.render(source, options)
         source = source.strip()
-        if source != '':
+        if source:
             output += source + '\n'
     output = output.strip()
     if len(outfile) == 0 or outfile == '-':
-        # Do not write to stdout when testing as it interferes with test results.
         sys.stdout.write(output)
     else:
-        with open(outfile) as f:
+        with open(outfile, 'w') as f:
             f.write(output)
     if errors > 0:
         die()

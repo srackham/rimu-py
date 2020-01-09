@@ -84,9 +84,9 @@ clean:
 	git gc --prune=now
 
 .PHONY: install
-# Install local binary distribution.
+# Install local binary distribution (forces reinstall).
 install:
-	python3 -m pip install -v $(BIN_DIST)
+	python3 -m pip install -v --ignore-installed $(BIN_DIST)
 
 .PHONY: uninstall
 uninstall:

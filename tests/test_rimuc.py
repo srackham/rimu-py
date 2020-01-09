@@ -1,12 +1,15 @@
 import io
+import json
 import sys
 
 import pytest
 
 import rimuc
+from rimu import api
 
 
 def execRimuc(capsys, monkeypatch=None, args=[], input=''):
+    api.init()
     sys.argv = ['rimuc', '--no-rimurc'] + args
     exitcode = 0
     if input != '':
@@ -45,5 +48,44 @@ def test_illegalLayout(capsys):
     assert captured.err.startswith('illegal --layout: foobar')
 
 
-# TODO
-# def test_jsonTests(capsys, monkeypatch):
+def test_jsonTests(capsys, monkeypatch):
+    with open('./tests/rimuc-tests.json') as f:
+        data = json.load(f)
+    for spec in data:
+        description = spec['description']
+        for layout in ['', 'classic', 'flex', 'sequel']:
+            # Skip if not a layouts test and we have a layout, or if it is a layouts test but no layout is specified.
+            if not spec.get('layouts', False) and layout or spec.get('layouts', False) and not layout:
+                continue
+            # Massage project-specific paths.
+            argstr = spec['args'].replace('./src/examples/example-rimurc.rmu', './tests/fixtures/example-rimurc.rmu')
+            argstr = argstr.replace('./test/fixtures/', './tests/fixtures/')
+            spec['expectedOutput'] = spec['expectedOutput'].replace('./test/fixtures/', './tests/fixtures/')
+            # Parse arguments string to arguments array.
+            args = []
+            if argstr:
+                for arg in argstr.split(' '):
+                    arg = arg.strip()
+                    if arg.startswith('"'):
+                        arg = arg[1:-1]  # Strip enclosing double-quotes.
+                    args.append(arg)
+            if layout:
+                args[0:0] = ['--layout', layout]
+            input = spec['input']
+            predicate = spec['predicate']
+            expectedOutput = spec['expectedOutput']
+            captured, exitcode = execRimuc(capsys, monkeypatch, args=args, input=input)
+            output = f'{captured.out}{captured.err}'
+            assert exitcode == spec.get('exitCode', 0)
+            if predicate == "equals":
+                assert output == expectedOutput
+            elif predicate == '!equals':
+                assert output != expectedOutput
+            elif predicate == 'contains':
+                assert expectedOutput in output
+            elif predicate == '!contains':
+                assert expectedOutput not in output
+            elif predicate == 'startsWith':
+                assert output.startswith(expectedOutput)
+            else:
+                raise Exception(description + ': illegal predicate: ' + predicate)
