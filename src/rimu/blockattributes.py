@@ -27,32 +27,44 @@ def parse(attrs: str) -> bool:
     '''Parse Block Attributes.
        class names = $1, id = $2, css-properties = $3, html-attributes = $4, block-options = $5'''
     global classes, id, css, attributes, opts, ids
+    if options.skipBlockAttributes():
+        return True
     text = attrs
     text = utils.replaceInline(text, ExpansionOptions(macros=True))
-    m = re.search(
-        r'^\\?\.((?:\s*[a-zA-Z][\w\-]*)+)*(?:\s*)?(#[a-zA-Z][\w\-]*\s*)?(?:\s*)?(?:"(.+?)")?(?:\s*)?(\[.+])?(?:\s*)?([+-][ \w+-]+)?$', text)
-    if m is None:
+
+    # TODO: fix this kludge: Split regexp in two to fix catastrophic backtracking issue
+    # The peformance problem is this asterisk:       * <-- split regexp here.
+    # m = re.search(r'^\\?\.((?:\s*[a-zA-Z][\w\-]*)+)*(?:\s*)?(#[a-zA-Z][\w\-]*\s*)?(?:\s*)?(?:"(.+?)")?(?:\s*)?(\[.+])?(?:\s*)?([+-][ \w+-]+)?$', text)
+    # if m is None:
+    #    return False
+    r1 = re.compile(r'^\\?\.((?:\s*[a-zA-Z][\w\-]*)+)*')
+    m1 = r1.match(text)
+    if m1 is None:
         return False
-    if not options.skipBlockAttributes():
-        if m[1]:
-            # HTML element class names.
-            classes += f' {m[1].strip()}'
-            classes = classes.strip()
-        if m[2]:
-            # HTML element id.
-            id = m[2].strip()[1:]
-        if m[3]:
-            # CSS properties.
-            if css and not css.endswith(';'):
-                css += ';'
-            css += ' ' + m[3].strip()
-            css = css.strip()
-        if m[4] and not options.isSafeModeNz():
-            # HTML attributes.
-            attributes += ' ' + m[4][1:- 1].strip()
-            attributes = attributes.strip()
-        if m[5]:
-            opts.parse(m[5])
+    # Prefixed empty placeholder group () to maintain match indexes in m2.
+    r2 = re.compile(r'()(?:\s*)?(#[a-zA-Z][\w\-]*\s*)?(?:\s*)?(?:"(.+?)")?(?:\s*)?(\[.+])?(?:\s*)?([+-][ \w+-]+)?$')
+    m2 = r2.match(text[m1.end():])
+    if m2 is None:
+        return False
+    if m1[1]:
+        # HTML element class names.
+        classes += f' {m1[1].strip()}'
+        classes = classes.strip()
+    if m2[2]:
+        # HTML element id.
+        id = m2[2].strip()[1:]
+    if m2[3]:
+        # CSS properties.
+        if css and not css.endswith(';'):
+            css += ';'
+        css += ' ' + m2[3].strip()
+        css = css.strip()
+    if m2[4] and not options.isSafeModeNz():
+        # HTML attributes.
+        attributes += ' ' + m2[4][1:- 1].strip()
+        attributes = attributes.strip()
+    if m2[5]:
+        opts.parse(m2[5])
     return True
 
 
