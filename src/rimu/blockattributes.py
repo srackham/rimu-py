@@ -2,13 +2,13 @@ import re
 from typing import List
 
 from rimu import options, utils
-from rimu.expansion import ExpansionOptions
+from rimu.expansion import Expand
 
 classes: str  # Space separated HTML class names.
 id: str  # HTML element id.
 css: str  # HTML CSS styles.
 attributes: str  # Other HTML element attributes.
-opts: ExpansionOptions
+opts: Expand
 
 ids: List[str] = []  # List of allocated HTML ids.
 
@@ -19,7 +19,7 @@ def init() -> None:
     id = ''
     css = ''
     attributes = ''
-    opts = ExpansionOptions()
+    opts = Expand()
     ids.clear()
 
 
@@ -30,7 +30,7 @@ def parse(attrs: str) -> bool:
     if options.skipBlockAttributes():
         return True
     text = attrs
-    text = utils.replaceInline(text, ExpansionOptions(macros=True))
+    text = utils.replaceInline(text, Expand(macros=True))
 
     # TODO: fix this kludge: Split regexp in two to fix catastrophic backtracking issue
     # The peformance problem is this asterisk:       * <-- split regexp here.

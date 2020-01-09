@@ -4,7 +4,7 @@ from typing import Any, Optional
 from rimu import options
 
 
-class ExpansionOptions:
+class Expand:
     '''Processing priority(highest to lowest): container, skip, spans and specials.
        If spans is true then both spans and specials are processed.
        They are assumed false if they are not explicitly defined.
@@ -30,7 +30,7 @@ class ExpansionOptions:
         self.specials = specials
 
     def __eq__(self, obj: Any) -> bool:
-        return (isinstance(obj, ExpansionOptions) and
+        return (isinstance(obj, Expand) and
                 self.macros == obj.macros and
                 self.container == obj.container and
                 self.skip == obj.skip and
@@ -38,8 +38,8 @@ class ExpansionOptions:
                 self.specials == obj.specials)
 
     @classmethod
-    def copyFrom(cls, other: 'ExpansionOptions') -> 'ExpansionOptions':
-        return ExpansionOptions(
+    def copyFrom(cls, other: 'Expand') -> 'Expand':
+        return Expand(
             other.macros,
             other.container,
             other.skip,
@@ -47,7 +47,7 @@ class ExpansionOptions:
             other.specials,
         )
 
-    def merge(self, other: 'ExpansionOptions') -> None:
+    def merge(self, other: 'Expand') -> None:
         if other is None:
             return
         if other.macros is not None:

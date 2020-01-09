@@ -2,7 +2,7 @@ import re
 from typing import Callable, List, Match, Optional, Pattern
 
 from rimu import api, blockattributes, io, macros, options, utils
-from rimu.expansion import ExpansionOptions
+from rimu.expansion import Expand
 
 MATCH_INLINE_TAG: Pattern[str] = re.compile(
     r'^(a|abbr|acronym|address|b|bdi|bdo|big|blockquote|br|cite|code|del|dfn|em|i|img|ins|kbd|mark|q|s|samp|small|span|strike|strong|sub|sup|time|tt|u|var|wbr)$',
@@ -11,7 +11,7 @@ MATCH_INLINE_TAG: Pattern[str] = re.compile(
 # Custom type defintions.
 Verify = Optional[Callable[[Match[str]], bool]]  # Additional match verification checks.
 DelimiterFilter = Optional[Callable[[Match[str], 'Def'], str]]  # Return filtered delimiter content.
-ContentFilter = Optional[Callable[[str, Match[str], ExpansionOptions], str]]
+ContentFilter = Optional[Callable[[str, Match[str], Expand], str]]
 
 
 class Def:
@@ -23,7 +23,7 @@ class Def:
     verify: Verify  # Additional match verification checks.
     delimiterFilter: DelimiterFilter  # Process opening delimiter. Return any delimiter content.
     contentFilter: ContentFilter
-    expand: ExpansionOptions
+    expand: Expand
     name: str  # Optional unique identifier.
 
     def __init__(self,
@@ -34,7 +34,7 @@ class Def:
                  verify: Verify = None,
                  delimiterFilter: DelimiterFilter = None,
                  contentFilter: ContentFilter = None,
-                 expand: ExpansionOptions = None,
+                 expand: Expand = None,
                  name: str = '',
                  ) -> None:
         self.openTag = openTag
@@ -48,9 +48,9 @@ class Def:
         self.delimiterFilter = delimiterFilter
         self.contentFilter = contentFilter
         if expand is not None:
-            self.expand = ExpansionOptions.copyFrom(expand)
+            self.expand = Expand.copyFrom(expand)
         else:
-            self.expand = ExpansionOptions()
+            self.expand = Expand()
         self.name = name
 
     @classmethod
@@ -95,7 +95,7 @@ def classInjectionFilter(match: Match[str], d: Def) -> str:
     return ''
 
 
-def macroDefContentFilter(text: str, match: Match[str], expand: ExpansionOptions) -> str:
+def macroDefContentFilter(text: str, match: Match[str], expand: Expand) -> str:
     '''contentFilter for multi-line macro definitions.'''
     m = re.search(r'^{([\w\-]+\??)}', match[0])  # Extract macro name from opening delimiter.
     assert m is not None
@@ -145,7 +145,7 @@ DEFAULT_DEFS: List[Def] = [
         closeMatch=macros.DEF_CLOSE,
         openTag='',
         closeTag='',
-        expand=ExpansionOptions(macros=True),
+        expand=Expand(macros=True),
         delimiterFilter=openingDelimiterFilter,
         contentFilter=macroDefContentFilter,
     ),
@@ -156,7 +156,7 @@ DEFAULT_DEFS: List[Def] = [
         closeMatch=re.compile(r'^\*+\/$'),
         openTag='',
         closeTag='',
-        expand=ExpansionOptions(
+        expand=Expand(
             skip=True, specials=True  # Fall-back if skip is disabled.
         ),
     ),
@@ -167,7 +167,7 @@ DEFAULT_DEFS: List[Def] = [
             r'^\\?(\.{2,})([\w\s-]*)$'),  # $1 is delimiter text, $2 is optional class names.
         openTag='<div>',
         closeTag='</div>',
-        expand=ExpansionOptions(
+        expand=Expand(
             container=True, specials=True  # Fall-back if container is disabled.
         ),
         delimiterFilter=classInjectionFilter,
@@ -179,7 +179,7 @@ DEFAULT_DEFS: List[Def] = [
             r'^\\?("{2,})([\w\s-]*)$'),  # $1 is delimiter text, $2 is optional class names.
         openTag='<blockquote>',
         closeTag='</blockquote>',
-        expand=ExpansionOptions(
+        expand=Expand(
             container=True, specials=True  # Fall-back if container is disabled.
         ),
         delimiterFilter=classInjectionFilter,
@@ -191,7 +191,7 @@ DEFAULT_DEFS: List[Def] = [
             r'^\\?(-{2,}|`{2,})([\w\s-]*)$'),  # $1 is delimiter text, $2 is optional class names.
         openTag='<pre><code>',
         closeTag='</code></pre>',
-        expand=ExpansionOptions(macros=False, specials=True),
+        expand=Expand(macros=False, specials=True),
         verify=lambda match:
             # The deprecated '-' delimiter does not support appended class names.
             not (match[1][0] == '-' and match[2].strip() != ''),
@@ -209,7 +209,7 @@ DEFAULT_DEFS: List[Def] = [
         closeMatch=re.compile(r'^$'),  # Blank line or EOF.
         openTag='',
         closeTag='',
-        expand=ExpansionOptions(macros=True),
+        expand=Expand(macros=True),
         verify=htmlVerify,
         delimiterFilter=openingDelimiterFilter,
         contentFilter=lambda text, *_: options.htmlSafeModeFilter(text),
@@ -221,7 +221,7 @@ DEFAULT_DEFS: List[Def] = [
         closeMatch=re.compile(r'^$'),  # Blank line or EOF.
         openTag='<pre><code>',
         closeTag='</code></pre>',
-        expand=ExpansionOptions(macros=False, specials=True),
+        expand=Expand(macros=False, specials=True),
         delimiterFilter=openingDelimiterFilter,
         contentFilter=indentedContentFilter,
     ),
@@ -232,7 +232,7 @@ DEFAULT_DEFS: List[Def] = [
         closeMatch=re.compile(r'^$'),  # Blank line or EOF.
         openTag='<blockquote><p>',
         closeTag='</p></blockquote>',
-        expand=ExpansionOptions(
+        expand=Expand(
             macros=True,
             spans=True,
             specials=True  # Fall-back if spans is disabled.
@@ -247,7 +247,7 @@ DEFAULT_DEFS: List[Def] = [
         closeMatch=re.compile(r'^$'),  # Blank line or EOF.
         openTag='<p>',
         closeTag='</p>',
-        expand=ExpansionOptions(
+        expand=Expand(
             macros=True,
             spans=True,
             specials=True  # Fall-back if spans is disabled.
@@ -302,7 +302,7 @@ def render(reader: io.Reader, writer: io.Writer, allowed: List[str] = None) -> b
         else:
             lines.extend(content)
         # Calculate block expansion options.
-        expand = ExpansionOptions.copyFrom(d.expand)
+        expand = Expand.copyFrom(d.expand)
         expand.merge(blockattributes.opts)
         # Translate block.
         if expand.skip is not True:
@@ -331,7 +331,7 @@ def render(reader: io.Reader, writer: io.Writer, allowed: List[str] = None) -> b
                 # Add a trailing '\n' if we've written a non-blank line and there are more source lines left.
                 writer.write('\n')
         # Reset consumed Block Attributes expansion options.
-        blockattributes.opts = ExpansionOptions()
+        blockattributes.opts = Expand()
         return True
     return False  # No matching delimited block found.
 

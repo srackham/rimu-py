@@ -2,7 +2,7 @@ from rimu import (blockattributes, delimitedblocks, expansion, io, lineblocks,
                   options, utils)
 
 from typing import Optional, Pattern, Match, List
-from rimu.expansion import ExpansionOptions
+from rimu.expansion import Expand
 import re
 
 
@@ -113,7 +113,7 @@ def renderListItem(item: ItemInfo, reader: io.Reader, writer: io.Writer) -> Opti
     text: str
     if d.termOpenTag:  # => definition list.
         writer.write(blockattributes.injectHtmlAttributes(d.termOpenTag))
-        text = utils.replaceInline(match[1], ExpansionOptions(macros=True, spans=True))
+        text = utils.replaceInline(match[1], Expand(macros=True, spans=True))
         writer.write(text)
         writer.write(d.termCloseTag)
         writer.write(d.itemOpenTag)
@@ -164,7 +164,7 @@ def renderListItem(item: ItemInfo, reader: io.Reader, writer: io.Writer) -> Opti
                 break
     # Write item text.
     text = itemLines.toString().strip()
-    text = utils.replaceInline(text, ExpansionOptions(macros=True, spans=True))
+    text = utils.replaceInline(text, Expand(macros=True, spans=True))
     writer.write(text)
     # Write attachment and child list.
     writer.buffer.extend(attachedLines.buffer)

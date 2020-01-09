@@ -2,19 +2,19 @@ import re
 from typing import Match
 
 from rimu import macros, options, spans
-from rimu.expansion import ExpansionOptions
+from rimu.expansion import Expand
 
 
 def replaceSpecialChars(s: str) -> str:
     return s.replace('&', '&amp;').replace('>', '&gt;').replace('<', '&lt;')
 
 
-def replaceMatch(match: Match, replacement: str, expand: ExpansionOptions = None) -> str:
+def replaceMatch(match: Match, replacement: str, expand: Expand = None) -> str:
     '''Replace pattern '$1' or '$$1', '$2' or '$$2'... in `replacement` with corresponding match groups
        from `match`. If pattern starts with one '$' character add specials to `expand`,
        if it starts with two '$' characters add spans to `expand`.'''
     if expand is None:
-        expand = ExpansionOptions()
+        expand = Expand()
 
     def repl(m):
         # Replace $1, $2 ... with corresponding match groups.
@@ -33,7 +33,7 @@ def replaceMatch(match: Match, replacement: str, expand: ExpansionOptions = None
     return re.sub(r'(\${1,2})(\d)', repl, replacement)
 
 
-def replaceInline(text: str, expand: ExpansionOptions) -> str:
+def replaceInline(text: str, expand: Expand) -> str:
     '''Replace the inline elements specified in options in text and return the result.'''
     result = text
     if expand.macros:

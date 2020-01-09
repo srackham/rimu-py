@@ -3,7 +3,7 @@ from typing import Callable, List, Match, Optional, Pattern
 
 from rimu import (blockattributes, delimitedblocks, expansion, io, macros,
                   options, quotes, replacements, utils)
-from rimu.expansion import ExpansionOptions
+from rimu.expansion import Expand
 
 # Custom types.
 Verify = Optional[Callable[[Match[str], io.Reader], bool]]   # Additional match verification checks.
@@ -50,7 +50,7 @@ def verifyMacroLine(match: Match[str], reader: io.Reader) -> bool:
 def blockDefFilter(match: Match[str], *_) -> str:
     if options.isSafeModeNz():
         return ''  # Skip if a safe mode is set.
-    value = utils.replaceInline(match[2], ExpansionOptions(macros=True))
+    value = utils.replaceInline(match[2], Expand(macros=True))
     delimitedblocks.setDefinition(match[1], value)
     return ''
 
@@ -60,8 +60,8 @@ def quoteDefFilter(match: Match[str], *_) -> str:
         return ''  # Skip if a safe mode is set.
     quotes.setDefinition(quotes.Def(
         quote=match[1],
-        openTag=utils.replaceInline(match[2], ExpansionOptions(macros=True)),
-        closeTag=utils.replaceInline(match[4], ExpansionOptions(macros=True)),
+        openTag=utils.replaceInline(match[2], Expand(macros=True)),
+        closeTag=utils.replaceInline(match[4], Expand(macros=True)),
         spans=match[3] == '|')
     )
     return ''
@@ -73,7 +73,7 @@ def replacementDefFilter(match: Match[str], *_) -> str:
     pattern = match[1]
     flags = match[2]
     replacement = match[3]
-    replacement = utils.replaceInline(replacement, ExpansionOptions(macros=True))
+    replacement = utils.replaceInline(replacement, Expand(macros=True))
     replacements.setDefinition(pattern, flags, replacement)
     return ''
 
@@ -81,7 +81,7 @@ def replacementDefFilter(match: Match[str], *_) -> str:
 def macroDefFilter(match: Match[str], *_) -> str:
     name = match[1]
     value = match[2]
-    value = utils.replaceInline(value, ExpansionOptions(macros=True))
+    value = utils.replaceInline(value, Expand(macros=True))
     macros.setValue(name, value)
     return ''
 
@@ -89,7 +89,7 @@ def macroDefFilter(match: Match[str], *_) -> str:
 def headerFilter(match: Match[str], _, d: Def) -> str:
     if macros.getValue('--header-ids') and blockattributes.id == '':
         blockattributes.id = blockattributes.slugify(match[2])
-    result = utils.replaceMatch(match, d.replacement, ExpansionOptions(macros=True))
+    result = utils.replaceMatch(match, d.replacement, Expand(macros=True))
     # Replace $1 with header number e.g. "<h###>" -> "<h3>"
     result = result.replace(match[1] + '>', str(len(match[1])) + '>')
     return result
@@ -100,12 +100,12 @@ def anchorFilter(match: Match[str], _, d: Def) -> str:
         return ''
     else:
         # Default(non-filter) replacement processing.
-        return utils.replaceMatch(match, d.replacement, ExpansionOptions(macros=True))
+        return utils.replaceMatch(match, d.replacement, Expand(macros=True))
 
 
 def apiOptionFilter(match: Match[str], *_) -> str:
     if not options.isSafeModeNz():
-        value = utils.replaceInline(match[2], ExpansionOptions(macros=True))
+        value = utils.replaceInline(match[2], Expand(macros=True))
         options.setOption(match[1], value)
     return ''
 
@@ -212,7 +212,7 @@ def render(reader: io.Reader, writer: io.Writer, allowed: List[str] = None) -> b
             if d.filter:
                 text = d.filter(match, reader, d)
             else:
-                text = utils.replaceMatch(match, d.replacement, ExpansionOptions(macros=True)) if d.replacement else ''
+                text = utils.replaceMatch(match, d.replacement, Expand(macros=True)) if d.replacement else ''
             if text:
                 text = blockattributes.injectHtmlAttributes(text)
                 writer.write(text)

@@ -1,17 +1,17 @@
-from rimu.expansion import ExpansionOptions
+from rimu.expansion import Expand
 
 
 def test_expansionOptions():
-    opts = ExpansionOptions(macros=True, specials=False)
-    opts.merge(ExpansionOptions(macros=False, container=True))
-    assert opts == ExpansionOptions(
+    opts = Expand(macros=True, specials=False)
+    opts.merge(Expand(macros=False, container=True))
+    assert opts == Expand(
         macros=False,
         container=True,
         specials=False)
 
-    opts = ExpansionOptions(macros=True, specials=False)
+    opts = Expand(macros=True, specials=False)
     opts.parse('-macros +spans')
-    assert opts == ExpansionOptions(
+    assert opts == Expand(
         macros=False,
         spans=True,
         specials=False)
