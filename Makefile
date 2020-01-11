@@ -44,7 +44,7 @@ repl:
 .PHONY: build
 # Build binary and source distributions.
 build: test
-	pip3 freeze > requirements.txt
+	pip3 freeze --all > requirements.txt
 	python3 setup.py --quiet sdist bdist_wheel
 
 .PHONY: resources
