@@ -1,5 +1,6 @@
 import io
 import os
+import re
 import sys
 from typing import List, Optional
 
@@ -7,6 +8,7 @@ import rimu
 import rimuc
 
 VERSION = '11.1.6'
+NAME = 'rimupy'
 HOME_DIR = os.path.expanduser('~')
 RIMURC = os.path.join(HOME_DIR, '.rimurc')
 
@@ -49,7 +51,9 @@ def main() -> None:
     while len(args) > 0:
         arg: str = args.pop(0)
         if arg in ['--help', '-h']:
-            print('\n' + readResource('manpage.txt'))
+            manpage = readResource('manpage.txt')
+            manpage = re.sub(r'\brimuc\b', NAME, manpage)
+            print('\n' + manpage)
             return
         elif arg in ['--version']:
             print(VERSION)
@@ -156,7 +160,7 @@ def main() -> None:
                 nonlocal errors
                 msg = f'{severity}: {"/dev/stdin" if infile == STDIN else infile}: {message}'
                 if len(msg) > 120:
-                    msg = msg[:117] + '...'
+                    msg = msg[: 117] + '...'
                 sys.stderr.write(msg + '\n')
                 if severity == 'error':
                     errors += 1
