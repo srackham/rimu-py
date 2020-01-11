@@ -44,6 +44,11 @@ repl:
 .PHONY: build
 # Build binary and source distributions.
 build: test
+	vers=$(VERS)
+	if ! grep "^VERSION = '$$vers'" src/rimuc/rimuc.py > /dev/null; then
+		echo "rimuc.py: VERSION does not match setup.py version $$vers."
+		exit 1
+	fi
 	pip3 freeze --all > requirements.txt
 	python3 setup.py --quiet sdist bdist_wheel
 
