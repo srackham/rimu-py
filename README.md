@@ -1,9 +1,5 @@
-# **PRE-RELEASE SCAFFOLDING**
-## **THIS PACKAGE IS NOT YET IMPLEMENTED**
-## **Tentative release date: March 2020**
-
-A port of the [Rimu Markup language](https://srackham.github.io/rimu/) written in the Python
-language.
+A port of the [Rimu Markup language](https://srackham.github.io/rimu/) written
+in the Python language.
 
 
 ## Features
@@ -18,15 +14,14 @@ following exceptions:
 ## Usage
 Install from [PyPI](https://pypi.org/project/rimu/):
 
-    pip install rimu
+    pip3 install rimu
 
 Example usage:
 
 ``` python
 import rimu
 
-def main():
-  print(rimu.render('Hello *Rimu*!'))
+print(rimu.render('*Hello World*!'))
 ```
 
 See also Rimu
@@ -36,7 +31,7 @@ See also Rimu
 ## CLI command
 The [Rimu CLI
 command](https://srackham.github.io/rimu/reference.html#rimuc-command) installed
-by Pipkis `rimupy`.
+by Pip is `rimupy`.
 
 You could also run it with `python3 -m rimuc`.
 
