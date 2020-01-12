@@ -31,9 +31,13 @@ See also Rimu
 ## CLI command
 The [Rimu CLI
 command](https://srackham.github.io/rimu/reference.html#rimuc-command) installed
-by Pip is `rimupy`.
+by Pip is `rimupy`. CLI command example:
 
-You could also run it with `python3 -m rimuc`.
+        echo 'Hello *Rimu*!' | rimupy
+
+This will output:
+
+        <p>Hello <em>Rimu</em>!</p>
 
 
 ## Building
