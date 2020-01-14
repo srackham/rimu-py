@@ -109,5 +109,7 @@ push: test
 
 .PHONY: publish
 publish: test
-	#twine upload $(SRC_DIST) $(BIN_DIST)
-	twine upload --repository-url https://test.pypi.org/legacy/ $(SRC_DIST) $(BIN_DIST)
+	# PyPI production site.
+	twine upload $(SRC_DIST) $(BIN_DIST)
+	# PyPI test site.
+	#twine upload --repository-url https://test.pypi.org/legacy/ $(SRC_DIST) $(BIN_DIST)
