@@ -2,7 +2,9 @@ from typing import Any, Callable, Optional
 
 from rimu import api, utils
 
-Callback = Optional[Callable[[str, str], None]]
+
+Callback = Optional[Callable[['CallbackMessage'], None]]
+
 
 # Global option values.
 safeMode: int = -1  # Trigger API initialization.
@@ -27,6 +29,15 @@ class RenderOptions:
         self.htmlReplacement = htmlReplacement
         self.reset = reset
         self.callback = callback
+
+
+class CallbackMessage:
+    type: str
+    text: str
+
+    def __init__(self, type: str, text: str):
+        self.type = type
+        self.text = text
 
 
 def init() -> None:
@@ -115,7 +126,7 @@ def htmlSafeModeFilter(html: str) -> str:
 
 def errorCallback(message: str) -> None:
     if callback is not None:
-        callback('error', message)
+        callback(CallbackMessage('error', message))
 
 
 def panic(message: str) -> None:

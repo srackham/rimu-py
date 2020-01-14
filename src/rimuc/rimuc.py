@@ -156,13 +156,13 @@ def main() -> None:
             ext = os.path.splitext(infile)[1]
         # Skip .html and pass-through inputs.
         if not (ext == '.html' or (pass_through and infile == STDIN)):
-            def callback(severity: str, message: str) -> None:
+            def callback(message: rimu.CallbackMessage) -> None:
                 nonlocal errors
-                msg = f'{severity}: {"/dev/stdin" if infile == STDIN else infile}: {message}'
+                msg = f'{message.type}: {"/dev/stdin" if infile == STDIN else infile}: {message.text}'
                 if len(msg) > 120:
                     msg = msg[: 117] + '...'
                 sys.stderr.write(msg + '\n')
-                if severity == 'error':
+                if message.type == 'error':
                     errors += 1
             options.callback = callback
             source = rimu.render(source, options)

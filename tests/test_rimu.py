@@ -28,9 +28,9 @@ def test_jsonTests():
         renderOptions.reset = spec['options'].get('reset')
         msg = ''
 
-        def callback(severity, message):
+        def callback(message: rimu.CallbackMessage):
             nonlocal msg
-            msg += f'{severity}: {message}\n'
+            msg += f'{message.type}: {message.text}\n'
         # Captured callback message.
         if spec['expectedCallback'] or unsupported:
             renderOptions.callback = callback
