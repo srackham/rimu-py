@@ -7,7 +7,7 @@ from typing import List, Optional
 import rimu
 import rimuc
 
-VERSION = '11.1.6'
+VERSION = '11.1.7'
 NAME = 'rimupy'
 HOME_DIR = os.path.expanduser('~')
 RIMURC = os.path.join(HOME_DIR, '.rimurc')
