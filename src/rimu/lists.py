@@ -1,9 +1,9 @@
+import re
+from typing import List, Match, Optional, Pattern
+
 from rimu import (blockattributes, delimitedblocks, expansion, io, lineblocks,
                   options, utils)
-
-from typing import Optional, Pattern, Match, List
 from rimu.expansion import Expand
-import re
 
 
 class Def:
@@ -112,13 +112,12 @@ def renderListItem(item: ItemInfo, reader: io.Reader, writer: io.Writer) -> Opti
     match = item.match
     text: str
     if d.termOpenTag:  # => definition list.
-        writer.write(blockattributes.injectHtmlAttributes(d.termOpenTag))
+        writer.write(blockattributes.injectHtmlAttributes(d.termOpenTag, consume=False))
+        blockattributes.id=''
         text = utils.replaceInline(match[1], Expand(macros=True, spans=True))
         writer.write(text)
         writer.write(d.termCloseTag)
-        writer.write(d.itemOpenTag)
-    else:
-        writer.write(blockattributes.injectHtmlAttributes(d.itemOpenTag))
+    writer.write(blockattributes.injectHtmlAttributes(d.itemOpenTag))
     # Process item text from first line.
     itemLines = io.Writer()
     text = match[match.re.groups]

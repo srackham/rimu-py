@@ -70,7 +70,7 @@ def parse(attrs: str) -> bool:
     return True
 
 
-def injectHtmlAttributes(tag: str) -> str:
+def injectHtmlAttributes(tag: str, consume: bool=True) -> str:
     '''Inject HTML attributes into the HTML `tag` and return result.
        Consume HTML attributes unless the 'tag' argument is blank.'''
     global classes, id, css, attributes, opts, ids
@@ -114,11 +114,12 @@ def injectHtmlAttributes(tag: str) -> str:
             before = result[:len(match[0])]
             after = result[len(match[0]):]
             result = before + ' ' + attrs + after
-    # Consume the attributes.
-    classes = ''
-    id = ''
-    css = ''
-    attributes = ''
+    if consume:
+        # Consume the attributes.
+        classes = ''
+        id = ''
+        css = ''
+        attributes = ''
     return result
 
 
