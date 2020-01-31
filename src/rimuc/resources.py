@@ -35,6 +35,11 @@ hljs.initHighlightingOnLoad();
 {--mathjax?} = ''
 {--mathjax-scripts} = '<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>'
 
+// List item CSS counters.
+{--dl-counter} = '<span class="dl-counter"></span>'
+{--ol-counter} = '<span class="ol-counter"></span>'
+{--ul-counter} = '<span class="ul-counter"></span>'
+
 // Classic layout specific.
 {--dropdown-toc?} = ''
 
@@ -1184,6 +1189,11 @@ hljs.initHighlightingOnLoad();
 {--mathjax?} = ''
 {--mathjax-scripts} = '<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>'
 
+// List item CSS counters.
+{--dl-counter} = '<span class="dl-counter"></span>'
+{--ol-counter} = '<span class="ol-counter"></span>'
+{--ul-counter} = '<span class="ul-counter"></span>'
+
 /*
   Legend theme.
 */
@@ -1837,6 +1847,11 @@ hljs.initHighlightingOnLoad();
 
 {--mathjax?} = ''
 {--mathjax-scripts} = '<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>'
+
+// List item CSS counters.
+{--dl-counter} = '<span class="dl-counter"></span>'
+{--ol-counter} = '<span class="ol-counter"></span>'
+{--ul-counter} = '<span class="ul-counter"></span>'
 
 // Sequel layout specific.
 {--toc-width?} = '300px'
