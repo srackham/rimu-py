@@ -57,7 +57,7 @@ build: test
 resources: $(RESOURCES_PY)
 
 $(RESOURCES_PY): $(RESOURCE_FILES)
-	# Build resources.dart containing Map<filename,contents> of rimuc resource files.
+	# Build resources.py containing Map<filename,contents> of rimuc resource files.
 	echo "Building resources $@"
 	echo "# Generated automatically from resource files. Do not edit." > $@
 	echo "from typing import Dict" >> $@

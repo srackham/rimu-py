@@ -17,7 +17,7 @@ def test_jsonTests():
         data = json.load(f)
     for spec in data:
         description = spec['description']
-        unsupported = 'dart' in spec.get('unsupported', '')
+        unsupported = 'py' in spec.get('unsupported', '')
         if unsupported:
             print(f'skipped unsupported: {description}')
             continue

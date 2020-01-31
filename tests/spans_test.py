@@ -1,4 +1,4 @@
-'''Basic rendering tests (full syntax tested in rimu_test.dart).'''
+'''Basic rendering tests (full syntax tested in rimu_test.py).'''
 
 import re
 
