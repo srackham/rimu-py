@@ -53,7 +53,7 @@ build: test
 		echo "rimuc.py: VERSION does not match setup.py version $$vers."
 		exit 1
 	fi
-	pip3 freeze --all > requirements.txt
+	# pip3 freeze --all > requirements.txt
 	python3 setup.py --quiet sdist bdist_wheel
 
 .PHONY: resources
