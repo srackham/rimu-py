@@ -44,6 +44,10 @@ repl:
 .PHONY: build
 # Build binary and source distributions.
 build: test
+	if [ -f "$(BIN_DIST)" -a ! -w "$(BIN_DIST)" ]; then
+		echo "build error: $(BIN_DIST) previously published."
+		exit 1
+	fi
 	vers=$(VERS)
 	if ! grep "^VERSION = '$$vers'" src/rimuc/rimuc.py > /dev/null; then
 		echo "rimuc.py: VERSION does not match setup.py version $$vers."
@@ -113,3 +117,5 @@ publish: test
 	twine upload $(SRC_DIST) $(BIN_DIST)
 	# PyPI test site.
 	#twine upload --repository-url https://test.pypi.org/legacy/ $(SRC_DIST) $(BIN_DIST)
+	# Do not allow modification after publication.
+	chmod 444 $(SRC_DIST) $(BIN_DIST)
