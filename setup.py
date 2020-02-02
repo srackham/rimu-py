@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="rimu",
-    version="11.1.8",
+    version="11.1.9",
     author="Stuart Rackham",
     author_email="srackham@gmail.com",
     license="MIT",
