@@ -45,7 +45,7 @@ To build from source:
 
 1. Clone source repo from Github:
 
-        git clone git@github.com:srackham/rimu-py.git
+        git clone https://github.com/srackham/rimu-py.git
 
 2. Create and initialize virtual environment:
 
