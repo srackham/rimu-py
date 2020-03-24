@@ -8,3 +8,4 @@ gitignore/
 .pytest_cache/
 .mypy_cache/
 pyrightconfig.json
+.vscode/
