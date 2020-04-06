@@ -4,7 +4,7 @@ __pycache__/
 build/
 dist/
 .venv/
-gitignore/
+tmp/
 .pytest_cache/
 .mypy_cache/
 pyrightconfig.json
