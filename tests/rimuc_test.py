@@ -3,7 +3,6 @@ import json
 import sys
 
 import pytest
-
 import rimuc
 from rimu import api
 
@@ -58,7 +57,7 @@ def test_jsonTests(capsys, monkeypatch):
             if not spec.get('layouts', False) and layout or spec.get('layouts', False) and not layout:
                 continue
             # Massage project-specific paths.
-            argstr = spec['args'].replace('./src/examples/example-rimurc.rmu', './tests/fixtures/example-rimurc.rmu')
+            argstr = spec['args'].replace('./examples/example-rimurc.rmu', './tests/fixtures/example-rimurc.rmu')
             argstr = argstr.replace('./test/fixtures/', './tests/fixtures/')
             spec['expectedOutput'] = spec['expectedOutput'].replace('./test/fixtures/', './tests/fixtures/')
             # Parse arguments string to arguments array.
