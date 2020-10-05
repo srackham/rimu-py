@@ -27,6 +27,6 @@ jobs:
         env:
           PYTHONPATH: ./src        
         run: |
-          pylint src tests
+          pylint src tests/*.py
           mypy src tests
           pytest tests
