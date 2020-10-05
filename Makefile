@@ -81,7 +81,7 @@ init:
 	fi
 	python3 -m venv .venv
 	source ./.venv/bin/activate
-	pip3 install -r requirements.txt
+	pip install --require requirements.txt
 
 .PHONY: clean
 # Delete cache and intermediate files.
