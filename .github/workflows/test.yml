@@ -21,12 +21,14 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
+      - name: Install dependencies and configure environment
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+        env:
+          PYTHONPATH: ./src        
       - name: Run tests
         run: |
           pylint src tests/*.py
           mypy src tests
-          PYTHONPATH=./src pytest tests
+          pytest tests
