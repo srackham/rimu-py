@@ -95,7 +95,7 @@ clean:
 .PHONY: install
 # Install local binary distribution (forces reinstall).
 install:
-	python3 -m pip install -v --ignore-installed $(BIN_DIST)
+	python3 -m pip install --ignore-installed $(BIN_DIST)
 
 .PHONY: uninstall
 uninstall:
