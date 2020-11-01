@@ -1,0 +1,17 @@
+#
+# Service for running rimu-py Makefile (test, build ...) e.g.
+#
+#     docker-compose run --rm rimu-py
+#     docker-compose run --rm rimu-py make lint
+#     docker-compose run --rm rimu-py bash
+#
+version: "3.8"
+services:
+
+  rimu-py:
+    build:
+      context: .
+    image: rimu-py
+    volumes:
+      - .:/rimu-py
+    command: make clean test

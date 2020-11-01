@@ -87,10 +87,9 @@ init:
 # Delete cache and intermediate files.
 clean:
 	rm -rf $$(find ./src ./tests -type d -name '*.egg-info' -o -name __pycache__)
-	rm -rf ./build
-	rm -rf ./.pytest_cache
-	rm -rf ./.mypy_cache
-	git gc --prune=now
+	rm -rf ./build/*
+	rm -rf ./.pytest_cache/*
+	rm -rf ./.mypy_cache/*
 
 .PHONY: install
 # Install local binary distribution (forces reinstall).
