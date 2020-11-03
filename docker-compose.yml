@@ -1,8 +1,17 @@
+# Service for running rimu-py Makefile tasks.
 #
-# Service for running rimu-py Makefile (test, build ...) e.g.
+# Build the rimu-py image using the local UID and GID:
+#
+# Linux:
+#     docker-compose build --build-arg UID=`id -u` --build-arg GID=`id -g`
+#
+# Windows (dummy UID/GID):
+#     docker-compose build --build-arg UID=1001 --build-arg GID=1001
+#
+# Run commands in the rimu-py dev environmant e.g.
 #
 #     docker-compose run --rm rimu-py
-#     docker-compose run --rm rimu-py make lint
+#     docker-compose run --rm rimu-py make resources
 #     docker-compose run --rm rimu-py bash
 #
 version: "3.8"
