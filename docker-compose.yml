@@ -2,11 +2,14 @@
 #
 # Build the rimu-py image using the local UID and GID:
 #
-# Linux:
+# Linux: Local uid and gid should be passed to docker-compose on the
+# command-line or in the docker-compose .env file:
+#
+#     docker-compose build  # UID and GID sourced from .env file.
 #     docker-compose build --build-arg UID=`id -u` --build-arg GID=`id -g`
 #
-# Windows (dummy UID/GID):
-#     docker-compose build --build-arg UID=1001 --build-arg GID=1001
+# Windows:
+#     docker-compose build
 #
 # Run commands in the rimu-py dev environmant e.g.
 #
@@ -20,6 +23,9 @@ services:
   rimu-py:
     build:
       context: .
+      args: 
+        UID: ${UID:-0}
+        GID: ${GID:-0}
     image: rimu-py
     volumes:
       - .:/rimu-py
