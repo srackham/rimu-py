@@ -2,7 +2,7 @@
 # A dev environment for rimu-py
 #
 FROM python:3.8-slim
-WORKDIR /rimu-py
+WORKDIR /workdir
 
 # Install dev packages.
 COPY requirements.txt requirements.txt
