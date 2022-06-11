@@ -1,29 +1,39 @@
-#
-# A dev environment for rimu-py
-#
-FROM python:3.8-slim
-WORKDIR /workdir
+# For more information, please refer to https://aka.ms/vscode-docker-python
+FROM python:3.8
 
-# Install dev packages.
-COPY requirements.txt requirements.txt
-RUN pip install --no-cache-dir --requirement requirements.txt
+# Keeps Python from generating .pyc files in the container
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# Turns off buffering for easier container logging
+ENV PYTHONUNBUFFERED=1
+
+# Project source code.
+ENV PYTHONPATH=/workspaces/rimu-py/src
+
+# Install Ubuntu packages
 RUN apt-get update && \
-    apt-get install --no-install-recommends --yes make && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    apt-get -y upgrade && \
+    apt-get install -y git sudo
 
-# If UID is non-zero create a user with uid=$UID and gid=$GID.
-ARG UID=${UID:-0}
-ARG GID=${GID:-0}
-RUN if [ $UID -eq 0 ]; then exit; fi && \
-    groupadd -g $GID user && \
-    useradd -m -u $UID -g $GID user
+# Enable passwordless sudo logins
+# https://stackoverflow.com/a/65434659/1136455
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-# Add per container anonymous volumes for volatile cache directories.
-RUN mkdir /rimu-py/.mypy_cache /rimu-py/.pytest_cache && \
-    if [ $UID -eq 0 ]; then exit; fi && \
-    chown $UID:$GID /rimu-py/.mypy_cache /rimu-py/.pytest_cache
-VOLUME /rimu-py/.mypy_cache
-VOLUME /rimu-py/.pytest_cache
+# Install pip requirements
+RUN pip install --upgrade pip
+COPY requirements.txt .
+RUN python -m pip install -r requirements.txt
 
-USER $UID
-CMD echo This image should be executed with the docker-compose run command.
+WORKDIR /app
+COPY . /app
+
+# Creates a non-root user with an explicit UID and adds permission to access the /app folder
+RUN adduser --uid 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
+# Allow user to sudo
+RUN sudo usermod -aG sudo appuser
+# Set user password
+RUN echo "appuser:appuser" | chpasswd
+USER appuser
+
+# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
+CMD ["make", "clean","test"]
