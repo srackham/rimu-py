@@ -72,16 +72,17 @@ $(RESOURCES_PY): $(RESOURCE_FILES)
 	done
 	echo "}" >> $@
 
-.PHONY: init
-# Create virtual environment and install development dependencies.
-init:
-	if [ -d .venv ]; then
-		echo "Virtual environment .venv directory already exists."
-		exit 1
-	fi
-	python3 -m venv .venv
-	source ./.venv/bin/activate
-	pip install --requirement requirements.txt
+# TODO: drop this unused code (no longer using Python virtual env)
+# .PHONY: init
+# # Create virtual environment and install development dependencies.
+# init:
+# 	if [ -d .venv ]; then
+# 		echo "Virtual environment .venv directory already exists."
+# 		exit 1
+# 	fi
+# 	python3 -m venv .venv
+# 	source ./.venv/bin/activate
+# 	pip install --requirement requirements.txt
 
 .PHONY: clean
 # Delete cache and intermediate files.
