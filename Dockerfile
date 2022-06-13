@@ -7,8 +7,9 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
-# Project source code.
-ENV PYTHONPATH=/workspaces/rimu-py/src
+# VSC Remote Containers default project source code location.
+ARG PROJECT_DIR=/workspaces/rimu-py
+ENV PYTHONPATH=${PROJECT_DIR}/src
 
 # Install Ubuntu packages
 RUN apt-get update && \
@@ -24,16 +25,18 @@ RUN pip install --upgrade pip
 COPY requirements.txt .
 RUN python -m pip install -r requirements.txt
 
-WORKDIR /app
-COPY . /app
+# Use the default VSC Remote Containers working directory.
+WORKDIR ${PROJECT_DIR}
+COPY . ${PROJECT_DIR}
 
-# Creates a non-root user with an explicit UID and adds permission to access the /app folder
-RUN adduser --uid 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
+# Creates a non-root user with an explicit UID and adds permission to access the project folder
+# https://code.visualstudio.com/remote/advancedcontainers/add-nonroot-user#_creating-a-nonroot-user
+RUN adduser --uid 5678 --disabled-password --gecos "" appuser && chown -R appuser ${PROJECT_DIR}
 # Allow user to sudo
-RUN sudo usermod -aG sudo appuser
+RUN usermod -aG sudo appuser
 # Set user password
 RUN echo "appuser:appuser" | chpasswd
 USER appuser
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD ["make", "clean","test"]
+CMD ["/usr/bin/make", "clean","test"]
