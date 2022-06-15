@@ -14,6 +14,7 @@ SHELL := bash
 VERS := $$(sed -ne 's/\s*version="\([0-9a-z.]*\)",.*/\1/p' setup.py)
 SRC_DIST := dist/rimu-$(VERS).tar.gz
 BIN_DIST := dist/rimu-$(VERS)-py3-none-any.whl
+LATEST_BIN_DIST := dist/rimu-latest-py3-none-any.whl
 RESOURCE_FILES = src/rimuc/resources/*
 RESOURCES_PY = src/rimuc/resources.py
 PYTHONPATH = ./src
@@ -55,6 +56,7 @@ build: test
 	fi
 	# pip3 freeze --all > requirements.txt
 	python3 setup.py --quiet sdist bdist_wheel
+	cp $(BIN_DIST) $(LATEST_BIN_DIST)
 
 .PHONY: resources
 # Build resources file.
@@ -71,18 +73,6 @@ $(RESOURCES_PY): $(RESOURCE_FILES)
 		echo "r'''$$(cat $$f)'''," >> $@
 	done
 	echo "}" >> $@
-
-# TODO: drop this unused code (no longer using Python virtual env)
-# .PHONY: init
-# # Create virtual environment and install development dependencies.
-# init:
-# 	if [ -d .venv ]; then
-# 		echo "Virtual environment .venv directory already exists."
-# 		exit 1
-# 	fi
-# 	python3 -m venv .venv
-# 	source ./.venv/bin/activate
-# 	pip install --requirement requirements.txt
 
 .PHONY: clean
 # Delete cache and intermediate files.
