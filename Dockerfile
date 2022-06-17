@@ -23,7 +23,7 @@ RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 # Install pip requirements
 RUN pip install --upgrade pip
 COPY requirements.txt .
-RUN python -m pip install -r requirements.txt
+RUN pip install -r requirements.txt
 
 # Use the default VSC Remote Containers working directory.
 WORKDIR ${PROJECT_DIR}
@@ -39,4 +39,4 @@ RUN echo "appuser:appuser" | chpasswd
 USER appuser
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
-CMD ["/usr/bin/make", "clean","test"]
+CMD ["/usr/bin/make", "test"]
