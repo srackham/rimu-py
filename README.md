@@ -3,18 +3,14 @@ in the Python language.
 
 
 ## Features
-Functionally identical to the [JavaScript
-implementation](https://github.com/srackham/rimu) version 11.1 with the
-following exceptions:
-
-- Does not support deprecated _Expression macro values_.
-- Does not support deprecated _Imported Layouts_.
+Functionally identical to the [TypeScript
+implementation](https://github.com/srackham/rimu) version 11.3.0.
 
 
 ## Usage
-Install from [PyPI](https://pypi.org/project/rimu/):
+Install from [PyPI](https://pypi.org/project/rimu/) using the Python `pip` command:
 
-    pip3 install rimu
+    pip install rimu
 
 Example usage:
 
@@ -31,32 +27,37 @@ See also Rimu
 ## CLI command
 The [Rimu CLI
 command](https://srackham.github.io/rimu/reference.html#rimuc-command) installed
-by Pip is `rimupy`. CLI command example:
+by Pip is named `rimupy`. CLI command example:
 
-        echo 'Hello *Rimu*!' | rimupy
+``` sh
+echo 'Hello *Rimu*!' | rimupy
+```
 
 This will output:
 
-        <p>Hello <em>Rimu</em>!</p>
+``` html
+<p>Hello <em>Rimu</em>!</p>
+```
 
 
 ## Building
-To build from source:
+As of version 11.3.0 rimu-py is developed in a Docker container environment
+using VSCode and the _Remote Containers_ extension.
 
-1. Clone source repo from Github:
+1. Install the source repo from Github:
 
         git clone https://github.com/srackham/rimu-py.git
 
-2. Create and initialize virtual environment:
+2. Build a development container image:
 
         cd rimu-py/
-        make init
+        docker build --tag rimu-py .
 
-3. Activate virtual environment:
+3. Create a container and run the bash shell:
 
-        source .venv/bin/activate
+        docker run -it rimu-py bash
 
-4. Test and build:
+4. Run tests and build rimu-py from the container bash prompt:
 
         make build
 
