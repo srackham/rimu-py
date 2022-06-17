@@ -83,9 +83,9 @@ clean:
 	rm -rf ./.mypy_cache/*
 
 .PHONY: install
-# Install local binary distribution (forces reinstall).
+# Install local binary distribution.
 install:
-	python3 -m pip install --ignore-installed $(BIN_DIST)
+	python3 -m pip install --ignore-installed $(LATEST_BIN_DIST)
 
 .PHONY: uninstall
 uninstall:
