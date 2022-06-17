@@ -54,7 +54,6 @@ build: test
 		echo "rimuc.py: VERSION does not match setup.py version $$vers."
 		exit 1
 	fi
-	# pip3 freeze --all > requirements.txt
 	python3 setup.py --quiet sdist bdist_wheel
 	cp $(BIN_DIST) $(LATEST_BIN_DIST)
 
@@ -102,10 +101,19 @@ push: test
 	git push -u --tags origin master
 
 .PHONY: publish
-publish: test
-	# PyPI production site.
+# Publish to PyPI production site.
+publish: build
 	twine upload $(SRC_DIST) $(BIN_DIST)
-	# PyPI test site.
-	#twine upload --repository-url https://test.pypi.org/legacy/ $(SRC_DIST) $(BIN_DIST)
-	# Do not allow modification after publication.
 	chmod 444 $(SRC_DIST) $(BIN_DIST)
+
+.PHONY: publish-testpypi
+# Publish package to PyPI test site https://test.pypi.org/
+# See https://packaging.python.org/en/latest/guides/using-testpypi/
+publish-testpypi: build
+	twine upload --repository testpypi $(SRC_DIST) $(BIN_DIST)
+
+.PHONY: install-testpypi
+# Install package from PyPI test site https://test.pypi.org/
+# See https://packaging.python.org/en/latest/guides/using-testpypi/
+install-testpypi:
+	python3 -m pip install --index-url https://test.pypi.org/simple/ --ignore-installed $(LATEST_BIN_DIST)
