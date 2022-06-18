@@ -116,4 +116,4 @@ publish-testpypi: build
 # Install package from PyPI test site https://test.pypi.org/
 # See https://packaging.python.org/en/latest/guides/using-testpypi/
 install-testpypi:
-	python3 -m pip install --index-url https://test.pypi.org/simple/ --ignore-installed $(LATEST_BIN_DIST)
+	python3 -m pip install --index-url https://test.pypi.org/simple/ --ignore-installed rimu
