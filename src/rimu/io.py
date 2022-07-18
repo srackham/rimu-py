@@ -39,13 +39,13 @@ class Reader:
         if (not self.eof()):
             self.pos += 1
 
-    def readTo(self, regexp: Pattern[str]) -> Optional[List[str]]:
+    def readTo(self, regexp: Pattern[str]) -> List[str]:
         '''Read to the first line matching the regexp.
 
         Return the array of self.lines preceding the match plus a line containing
         the $1 match group (if it exists).
-        Return null if an self.EOF is encountered.
-        Exit with the reader pointing to the line following the match.'''
+        If an EOF is encountered return all lines.
+        Exit with the reader pointing to the line containing the matched line.'''
         result = []
         match = None
         while (not self.eof()):
@@ -53,15 +53,10 @@ class Reader:
             if (match is not None):
                 if (regexp.groups > 0):
                     result.append(match[1])  # $1
-                self.next()
                 break
             result.append(self.cursor)
             self.next()
-        # Blank line matches self.EOF.
-        if (match is not None or (regexp.pattern == r'^$' and self.eof())):
-            return result
-        else:
-            return None
+        return result
 
     def skipBlankLines(self) -> None:
         while (not self.eof() and self.cursor.strip() == ''):

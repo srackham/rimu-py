@@ -24,7 +24,7 @@ class Def:
     delimiterFilter: DelimiterFilter  # Process opening delimiter. Return any delimiter content.
     contentFilter: ContentFilter
     expand: Expand
-    name: str  # Optional unique identifier.
+    name: str  # Unique identifier.
 
     def __init__(self,
                  openTag: str,
@@ -141,6 +141,7 @@ DEFAULT_DEFS: List[Def] = [
 
     # Multi-line macro literal value definition.
     Def(
+        name="macro-definition",
         openMatch=macros.DEF_OPEN,  # $1 is first line of macro.
         closeMatch=macros.DEF_CLOSE,
         openTag='',
@@ -176,7 +177,7 @@ DEFAULT_DEFS: List[Def] = [
     Def(
         name='quote',
         openMatch=re.compile(
-            r'^\\?("{2,})([\w\s-]*)$'),  # $1 is delimiter text, $2 is optional class names.
+            r'^\\?("{2,}|>{2,})([\w\s-]*)$'),  # $1 is delimiter text, $2 is optional class names.
         openTag='<blockquote>',
         closeTag='</blockquote>',
         expand=Expand(
@@ -206,7 +207,7 @@ DEFAULT_DEFS: List[Def] = [
         openMatch=re.compile(
             r'^(<!--.*|<!DOCTYPE(?:\s.*)?|<\/?([a-z][a-z0-9]*)(?:[\s>].*)?)$',
             re.IGNORECASE),
-        closeMatch=re.compile(r'^$'),  # Blank line or EOF.
+        closeMatch=re.compile(r'^$'),
         openTag='',
         closeTag='',
         expand=Expand(macros=True),
@@ -218,7 +219,7 @@ DEFAULT_DEFS: List[Def] = [
     Def(
         name='indented',
         openMatch=re.compile(r'^\\?(\s+\S.*)$'),  # $1 is first line of block.
-        closeMatch=re.compile(r'^$'),  # Blank line or EOF.
+        closeMatch=re.compile(r'^$'),
         openTag='<pre><code>',
         closeTag='</code></pre>',
         expand=Expand(macros=False, specials=True),
@@ -229,7 +230,7 @@ DEFAULT_DEFS: List[Def] = [
     Def(
         name='quote-paragraph',
         openMatch=re.compile(r'^\\?(>.*)$'),  # $1 is first line of block.
-        closeMatch=re.compile(r'^$'),  # Blank line or EOF.
+        closeMatch=re.compile(r'^$'),
         openTag='<blockquote><p>',
         closeTag='</p></blockquote>',
         expand=Expand(
@@ -244,7 +245,7 @@ DEFAULT_DEFS: List[Def] = [
     Def(
         name='paragraph',
         openMatch=re.compile(r'(.*)'),  # $1 is first line of block.
-        closeMatch=re.compile(r'^$'),  # Blank line or EOF.
+        closeMatch=re.compile(r'^$'),
         openTag='<p>',
         closeTag='</p>',
         expand=Expand(
@@ -297,9 +298,10 @@ def render(reader: io.Reader, writer: io.Writer, allowed: List[str] = None) -> b
         # Read content up to the closing delimiter.
         reader.next()
         content = reader.readTo(d.closeMatch or d.openMatch)
-        if content is None:
-            options.errorCallback('unterminated delimited block: ' + match[0])
-        else:
+        if reader.eof() and d.name in ["code", "comment", "division", "quote"]:
+            options.errorCallback("unterminated %s block: %s" % (d.name,match[0]))
+        reader.next() # Skip closing delimiter.
+        if content:
             lines.extend(content)
         # Calculate block expansion options.
         expand = Expand.copyFrom(d.expand)

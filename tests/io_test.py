@@ -34,9 +34,12 @@ def test_Reader():
     assert len(lines) == 1
     assert lines[0] == 'Hello'
     assert reader.eof() == False
+    reader.next()
     lines = reader.readTo(re.compile(r'^<(.*)>$'))
     assert len(lines) == 3
     assert lines[2] == ' Goodbye '
+    assert reader.eof() == False
+    reader.next()
     assert reader.eof() == True
 
     reader = io.Reader('\n\nHello\nWorld!')

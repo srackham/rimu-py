@@ -74,7 +74,7 @@ def test_jsonTests(capsys, monkeypatch):
             predicate = spec['predicate']
             expectedOutput = spec['expectedOutput']
             captured, exitcode = execRimuc(capsys, monkeypatch, args=args, input=input)
-            output = f'{captured.out}{captured.err}'
+            output = f'{captured.err}{captured.out}'
             assert exitcode == spec.get('exitCode', 0)
             if predicate == "equals":
                 assert output == expectedOutput
