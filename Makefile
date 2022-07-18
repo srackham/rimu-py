@@ -46,7 +46,7 @@ repl:
 # Build binary and source distributions.
 build: test
 	if [ -f "$(BIN_DIST)" -a ! -w "$(BIN_DIST)" ]; then
-		echo "build error: $(BIN_DIST) previously published."
+		echo "build error: $(BIN_DIST) previously published: bump the version number"
 		exit 1
 	fi
 	vers=$(VERS)
