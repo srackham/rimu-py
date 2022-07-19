@@ -4,7 +4,7 @@ in the Python language.
 
 ## Features
 Functionally identical to the [TypeScript
-implementation](https://github.com/srackham/rimu) version 11.3.0.
+implementation](https://github.com/srackham/rimu) version 11.4.0.
 
 
 ## Usage
