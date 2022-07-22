@@ -8,7 +8,7 @@ import rimu
 
 import rimuc
 
-VERSION = '11.4.0'
+VERSION = '11.5.0a0'    # Version number conforms to Python PEP 440.
 NAME = 'rimupy'
 HOME_DIR = os.path.expanduser('~')
 RIMURC = os.path.join(HOME_DIR, '.rimurc')
