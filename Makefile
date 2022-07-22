@@ -11,10 +11,9 @@ SHELL := bash
 .SILENT:
 
 # VERS extracts the version number from setup.py
-VERS := $$(sed -ne 's/\s*version="\([0-9a-z.]*\)",.*/\1/p' setup.py)
+VERS := $$(sed -ne 's/\s*version="\([0-9]\+[.][0-9]\+[.][0-9]\+[ab][0-9]\+\)",.*/\1/p' setup.py)
 SRC_DIST := dist/rimu-$(VERS).tar.gz
 BIN_DIST := dist/rimu-$(VERS)-py3-none-any.whl
-LATEST_BIN_DIST := dist/rimu-latest-py3-none-any.whl
 RESOURCE_FILES = src/rimuc/resources/*
 RESOURCES_PY = src/rimuc/resources.py
 PYTHONPATH = ./src
@@ -49,13 +48,11 @@ build: test
 		echo "build error: $(BIN_DIST) previously published: bump the version number"
 		exit 1
 	fi
-	vers=$(VERS)
-	if ! grep "^VERSION = '$$vers'" src/rimuc/rimuc.py > /dev/null; then
-		echo "rimuc.py: VERSION does not match setup.py version $$vers."
+	if ! grep "^VERSION = '$(VERS)'" src/rimuc/rimuc.py > /dev/null; then
+		echo "rimuc.py: VERSION does not match setup.py version $(VERS)."
 		exit 1
 	fi
 	python3 setup.py --quiet sdist bdist_wheel
-	cp $(BIN_DIST) $(LATEST_BIN_DIST)
 
 .PHONY: resources
 # Build resources file.
@@ -84,7 +81,7 @@ clean:
 .PHONY: install
 # Install local binary distribution.
 install:
-	python3 -m pip install --ignore-installed $(LATEST_BIN_DIST)
+	python3 -m pip install --ignore-installed $(BIN_DIST)
 
 .PHONY: uninstall
 uninstall:
