@@ -36,6 +36,10 @@ lint: resources
 	echo mypy...
 	mypy src tests
 
+.PHONY: version
+version:
+	echo $(VERS)
+
 .PHONY: repl
 # Open Python REPL.
 repl:
