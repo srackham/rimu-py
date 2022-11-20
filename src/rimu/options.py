@@ -1,7 +1,6 @@
 from typing import Any, Callable, Optional
 
-from rimu import api, utils
-
+from rimu import document, utils
 
 Callback = Optional[Callable[['CallbackMessage'], None]]
 
@@ -100,7 +99,7 @@ def setOption(name: str, value: Any) -> None:
         if value is None or value == False or value == 'false':
             return
         elif value == True or value == 'true':
-            api.init()
+            document.init()
         else:
             errorCallback('illegal reset API option value: ' + str(value))
     elif name == 'htmlReplacement':

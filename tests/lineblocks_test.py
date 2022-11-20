@@ -1,5 +1,6 @@
-from rimu import lineblocks, io, api
 from typing import Dict
+
+from rimu import document, io, lineblocks
 
 
 def test_render():
@@ -15,7 +16,7 @@ def test_render():
         r"/\.{3}/i = '&hellip;'": r'',
         r"{foo}='bar'": r'',
     }
-    api.init()
+    document.init()
     for k, v in tests.items():
         reader = io.Reader(k)
         writer = io.Writer()

@@ -3,12 +3,13 @@ import json
 import sys
 
 import pytest
+
 import rimuc
-from rimu import api
+from rimu import document
 
 
 def execRimuc(capsys, monkeypatch=None, args=[], input=''):
-    api.init()
+    document.init()
     sys.argv = ['rimuc', '--no-rimurc'] + args
     exitcode = 0
     if input != '':

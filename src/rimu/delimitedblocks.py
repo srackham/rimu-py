@@ -1,7 +1,7 @@
 import re
 from typing import Callable, List, Match, Optional, Pattern
 
-from rimu import api, blockattributes, io, macros, options, utils
+from rimu import blockattributes, document, io, macros, options, utils
 from rimu.expansion import Expand
 
 MATCH_INLINE_TAG: Pattern[str] = re.compile(
@@ -318,7 +318,7 @@ def render(reader: io.Reader, writer: io.Writer, allowed: List[str] = None) -> b
                 opentag = blockattributes.injectHtmlAttributes(opentag)
             if expand.container:
                 blockattributes.opts.container = None  # Consume before recursion.
-                text = api.render(text)
+                text = document.render(text)
             else:
                 text = utils.replaceInline(text, expand)
             closetag = d.closeTag

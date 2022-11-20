@@ -1,4 +1,4 @@
-from rimu import api, options
+from rimu import document, options
 from rimu.options import RenderOptions
 
 
@@ -8,6 +8,6 @@ def render(source: str, opts: RenderOptions = None) -> str:
         opts = RenderOptions()
     # Implicit first-call API initialisation.
     if options.safeMode == -1:
-        api.init()
+        document.init()
     options.updateFrom(opts)
-    return api.render(source)
+    return document.render(source)

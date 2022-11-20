@@ -1,8 +1,8 @@
-from rimu import lists, api, io
+from rimu import document, io, lists
 
 
 def test_render():
-    api.init()
+    document.init()
 
     input = '- Item 1'
     reader = io.Reader(input)
