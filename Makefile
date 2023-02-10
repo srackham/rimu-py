@@ -16,7 +16,7 @@ SRC_DIST := dist/rimu-$(VERS).tar.gz
 BIN_DIST := dist/rimu-$(VERS)-py3-none-any.whl
 RESOURCE_FILES = src/rimuc/resources/*
 RESOURCES_PY = src/rimuc/resources.py
-PYTHONPATH = ./src
+PYTHONPATH = ./src	# So tests can import source packages.
 
 .PHONY: test
 test: resources lint
@@ -56,7 +56,8 @@ build: test
 		echo "rimuc.py: VERSION does not match setup.py version $(VERS)."
 		exit 1
 	fi
-	python3 setup.py --quiet sdist bdist_wheel
+	python3 setup.py --quiet sdist
+	pip wheel --quiet --wheel-dir dist .
 
 .PHONY: resources
 # Build resources file.
