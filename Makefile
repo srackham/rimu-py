@@ -10,6 +10,15 @@ SHELL := bash
 .ONESHELL:
 .SILENT:
 
+# list Makefile targets (https://stackoverflow.com/a/58316463/1136455)
+# The '-' in front of 'make' to ignore errors
+.PHONY: list
+list:
+	-make -qp | \
+	awk -F':' '/^[a-zA-Z0-9][^$$#\/\t=]*:([^=]|$$)/ {split($$1,A,/ /);for(i in A)print A[i]}' | \
+	grep -v Makefile | \
+	sort -u
+
 # VERS extracts the version number from setup.py
 VERS := $$(sed -ne 's/\s*version="\([0-9]\+[.][0-9]\+[.][0-9]\+[ab][0-9]\+\)",.*/\1/p' setup.py)
 SRC_DIST := dist/rimu-$(VERS).tar.gz
