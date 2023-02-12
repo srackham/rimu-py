@@ -124,6 +124,8 @@ create-env:
 .PHONY: export-env
 export-env:
 	conda env export --name rimu-py --file rimu-py-env.yaml
+	# The requirements.txt file is used by .github/workflows/test.yaml
+	pip freeze > requirements.txt
 
 .PHONY: publish-testpypi
 # Publish package to PyPI test site https://test.pypi.org/
