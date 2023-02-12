@@ -117,6 +117,14 @@ publish: build
 	twine upload $(SRC_DIST) $(BIN_DIST)
 	chmod 444 $(SRC_DIST) $(BIN_DIST)
 
+.PHONY: create-env
+create-env:
+	conda env create --file rimu-py-env.yaml
+
+.PHONY: export-env
+export-env:
+	conda env export --name rimu-py --file rimu-py-env.yaml
+
 .PHONY: publish-testpypi
 # Publish package to PyPI test site https://test.pypi.org/
 # See https://packaging.python.org/en/latest/guides/using-testpypi/
