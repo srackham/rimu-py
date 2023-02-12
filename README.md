@@ -41,24 +41,22 @@ This will output:
 
 
 ## Building
-As of version 11.3.0 rimu-py is developed in a Docker container environment
-using VSCode and the _Remote Containers_ extension.
+Development is carried out in a Conda virtual environment so you need to have either Anaconda or Miniconda installed.
+
+Build instructions:
 
 1. Install the source repo from Github:
 
         git clone https://github.com/srackham/rimu-py.git
 
-2. Build a development container image:
+2. Create the `rimu-py` Conda environment (this includes Python and all the necessary Python packages):
 
         cd rimu-py/
-        docker build --tag rimu-py .
+        conda env create --file rimu-py-env.yaml
 
-3. Create a container and run the bash shell:
+3. Run tests and build rimu-py:
 
-        docker run -it rimu-py bash
-
-4. Run tests and build rimu-py from the container bash prompt:
-
+        conda activate rimu-py
         make build
 
 

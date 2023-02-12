@@ -1,6 +1,9 @@
 This log contains Python specific changes, the [full change
 log](https://srackham.github.io/rimu/changelog.html) is on the Rimu website.
 
+## 11.4.1
+- Moved the development environment from a Docker container to a Conda virtual environment (eliminates the need for Docker and having to develop remotely in a Docker container).
+
 ## 11.4.0
 - Added GFM (GitHub Flavored Markdown) multiline blockquote delimited block syntax.
 
