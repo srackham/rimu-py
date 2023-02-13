@@ -20,7 +20,7 @@ list:
 	sort -u
 
 # VERS extracts the version number from setup.py
-VERS := $$(sed -ne 's/\s*version="\([0-9]\+[.][0-9]\+[.][0-9]\+[ab][0-9]\+\)",.*/\1/p' setup.py)
+VERS := $$(sed -ne 's/\s*version="\([0-9]\+[.][0-9]\+[.][0-9]\+\([ab][0-9]\+\)\?\)",.*/\1/p' setup.py)
 SRC_DIST := dist/rimu-$(VERS).tar.gz
 BIN_DIST := dist/rimu-$(VERS)-py3-none-any.whl
 RESOURCE_FILES = src/rimuc/resources/*
