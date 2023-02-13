@@ -52,7 +52,7 @@ Build instructions:
 2. Create the `rimu-py` Conda environment (this includes Python and all the necessary Python packages):
 
         cd rimu-py/
-        conda env create --file rimu-py-env.yaml
+        conda env create --file environment.yaml
 
 3. Run tests and build rimu-py:
 
