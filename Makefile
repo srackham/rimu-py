@@ -52,7 +52,7 @@ version:
 .PHONY: repl
 # Open Python REPL.
 repl:
-	PYTHONPATH=$(PYTHONPATH) python3
+	PYTHONPATH=$(PYTHONPATH) python
 
 .PHONY: build
 # Build binary and source distributions.
@@ -65,7 +65,7 @@ build: test
 		echo "rimuc.py: VERSION does not match setup.py version $(VERS)."
 		exit 1
 	fi
-	python3 setup.py --quiet sdist
+	python setup.py --quiet sdist
 	pip wheel --quiet --wheel-dir dist .
 
 .PHONY: resources
@@ -95,11 +95,11 @@ clean:
 .PHONY: install
 # Install local binary distribution.
 install:
-	python3 -m pip install --ignore-installed $(BIN_DIST)
+	python -m pip install --ignore-installed $(BIN_DIST)
 
 .PHONY: uninstall
 uninstall:
-	python3 -m pip uninstall -y rimu
+	python -m pip uninstall -y rimu
 
 .PHONY: tag
 tag: test
@@ -137,4 +137,4 @@ publish-testpypi: build
 # Install package from PyPI test site https://test.pypi.org/
 # See https://packaging.python.org/en/latest/guides/using-testpypi/
 install-testpypi:
-	python3 -m pip install --index-url https://test.pypi.org/simple/ --ignore-installed rimu
+	python -m pip install --index-url https://test.pypi.org/simple/ --ignore-installed rimu
