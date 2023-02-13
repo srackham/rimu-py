@@ -5,10 +5,9 @@ import sys
 from typing import List, Optional
 
 import rimu
-
 import rimuc
 
-VERSION = '11.4.1a0'    # Version number conforms to Python PEP 440.
+VERSION = '11.4.1'    # Version number conforms to Python PEP 440.
 NAME = 'rimupy'
 HOME_DIR = os.path.expanduser('~')
 RIMURC = os.path.join(HOME_DIR, '.rimurc')
