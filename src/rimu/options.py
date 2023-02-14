@@ -68,7 +68,7 @@ def skipBlockAttributes() -> bool:
 
 def updateFrom(options: RenderOptions) -> None:
     ''' Update specified (non-null) options.'''
-    global safeMode, htmlReplacement, callback
+    global callback # pylint: disable=global-variable-not-assigned
     # Install callback first to ensure option errors are logged.
     if callback is not None:
         callback = options.callback
@@ -84,7 +84,7 @@ def updateFrom(options: RenderOptions) -> None:
 
 def setOption(name: str, value: Any) -> None:
     '''Set named option value.'''
-    global safeMode, htmlReplacement, callback
+    global safeMode, htmlReplacement, callback  # pylint: disable=global-variable-not-assigned
     if name == 'safeMode':
         n = 0
         try:

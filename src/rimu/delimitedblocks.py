@@ -261,7 +261,6 @@ DEFAULT_DEFS: List[Def] = [
 
 def init() -> None:
     '''Reset definitions to defaults.'''
-    global defs
     # Make shallow of DEFAULT_DEFS (list and list objects).
     defs.clear()
     for d in DEFAULT_DEFS:
@@ -271,7 +270,6 @@ def init() -> None:
 # If the next element in the reader is a valid delimited block render it
 # and return True, else return False.
 def render(reader: io.Reader, writer: io.Writer, allowed: List[str] = None) -> bool:
-    global defs
     if allowed is None:
         allowed = []
     if reader.eof():

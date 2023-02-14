@@ -42,7 +42,6 @@ unescapeRe: Pattern[str]    # Searches for escaped quotes.
 
 def init() -> None:
     '''Reset definitions to defaults.'''
-    global defs
     # Make shallow copy of DEFAULT_DEFS (list and list objects).
     defs.clear()
     defs.extend(map(lambda d: Def.copyFrom(d), DEFAULT_DEFS))

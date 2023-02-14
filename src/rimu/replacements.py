@@ -138,7 +138,6 @@ DEFAULT_DEFS: List[Def] = [
 
 def init() -> None:
     '''Reset definitions to defaults.'''
-    global defs
     # Make shallow copy of DEFAULT_DEFS (list and list objects).
     defs.clear()
     for d in DEFAULT_DEFS:

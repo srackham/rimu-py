@@ -14,7 +14,7 @@ ids: List[str] = []  # List of allocated HTML ids.
 
 
 def init() -> None:
-    global classes, id, css, attributes, opts, ids
+    global classes, id, css, attributes, opts, ids  # pylint: disable=global-variable-not-assigned
     classes = ''
     id = ''
     css = ''
@@ -27,7 +27,7 @@ def parse(attrs: str) -> bool:
     '''Parse Block Attributes line:
        .class-names #id "css-properties" [html-attributes] block-options
     '''
-    global classes, id, css, attributes, opts, ids
+    global classes, id, css, attributes, opts, ids  # pylint: disable=global-variable-not-assigned
     if options.skipBlockAttributes():
         return True
     text = attrs
@@ -73,7 +73,7 @@ def parse(attrs: str) -> bool:
 def injectHtmlAttributes(tag: str, consume: bool=True) -> str:
     '''Inject HTML attributes into the HTML `tag` and return result.
        Consume HTML attributes unless the 'tag' argument is blank.'''
-    global classes, id, css, attributes, opts, ids
+    global classes, id, css, attributes, opts, ids  # pylint: disable=global-variable-not-assigned
     if not tag:
         return tag
     result = tag

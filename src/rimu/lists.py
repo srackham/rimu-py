@@ -91,7 +91,6 @@ def render(reader: io.Reader, writer: io.Writer) -> bool:
 
 
 def renderList(item: ItemInfo, reader: io.Reader, writer: io.Writer) -> Optional[ItemInfo]:
-    global ids
     ids.append(item.id)
     writer.write(blockattributes.injectHtmlAttributes(item.listdef.listOpenTag))
     nextItem: Optional[ItemInfo]
