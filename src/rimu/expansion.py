@@ -17,11 +17,11 @@ class Expand:
     specials: Optional[bool]
 
     def __init__(self,
-                 macros: bool = None,
-                 container: bool = None,
-                 skip: bool = None,
-                 spans: bool = None,
-                 specials: bool = None,
+                 macros: Optional[bool] = None,
+                 container: Optional[bool] = None,
+                 skip: Optional[bool] = None,
+                 spans: Optional[bool] = None,
+                 specials: Optional[bool] = None,
                  ):
         self.macros = macros
         self.container = container

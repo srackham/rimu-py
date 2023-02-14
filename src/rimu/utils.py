@@ -1,5 +1,5 @@
 import re
-from typing import Match
+from typing import Optional, Match
 
 from rimu import macros, options, spans
 from rimu.expansion import Expand
@@ -9,7 +9,7 @@ def replaceSpecialChars(s: str) -> str:
     return s.replace('&', '&amp;').replace('>', '&gt;').replace('<', '&lt;')
 
 
-def replaceMatch(match: Match, replacement: str, expand: Expand = None) -> str:
+def replaceMatch(match: Match, replacement: str, expand: Optional[Expand] = None) -> str:
     '''Replace pattern '$1' or '$$1', '$2' or '$$2'... in `replacement` with corresponding match groups
        from `match`. If pattern starts with one '$' character add specials to `expand`,
        if it starts with two '$' characters add spans to `expand`.'''

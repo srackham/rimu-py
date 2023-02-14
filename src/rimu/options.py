@@ -19,10 +19,10 @@ class RenderOptions:
     callback: Callback
 
     def __init__(self,
-                 safeMode: int = None,
-                 htmlReplacement: str = None,
-                 reset: Any = None,
-                 callback: Callback = None,
+                 safeMode: Optional[int] = None,
+                 htmlReplacement: Optional[str] = None,
+                 reset: Optional[Any] = None,
+                 callback: Optional[Callback] = None,
                  ):
         self.safeMode = safeMode
         self.htmlReplacement = htmlReplacement

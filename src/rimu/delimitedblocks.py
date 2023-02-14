@@ -30,11 +30,11 @@ class Def:
                  openTag: str,
                  closeTag: str,
                  openMatch: Pattern[str],
-                 closeMatch: Pattern[str] = None,
-                 verify: Verify = None,
-                 delimiterFilter: DelimiterFilter = None,
-                 contentFilter: ContentFilter = None,
-                 expand: Expand = None,
+                 closeMatch: Optional[Pattern[str]] = None,
+                 verify: Optional[Verify] = None,
+                 delimiterFilter: Optional[DelimiterFilter] = None,
+                 contentFilter: Optional[ContentFilter] = None,
+                 expand: Optional[Expand] = None,
                  name: str = '',
                  ) -> None:
         self.openTag = openTag
@@ -269,7 +269,7 @@ def init() -> None:
 
 # If the next element in the reader is a valid delimited block render it
 # and return True, else return False.
-def render(reader: io.Reader, writer: io.Writer, allowed: List[str] = None) -> bool:
+def render(reader: io.Reader, writer: io.Writer, allowed: Optional[List[str]] = None) -> bool:
     if allowed is None:
         allowed = []
     if reader.eof():

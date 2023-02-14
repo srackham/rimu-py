@@ -1,8 +1,9 @@
 from rimu import document, options
 from rimu.options import RenderOptions
+from typing import Optional
 
 
-def render(source: str, opts: RenderOptions = None) -> str:
+def render(source: str, opts: Optional[RenderOptions] = None) -> str:
     '''Exported render() API.'''
     if opts is None:
         opts = RenderOptions()

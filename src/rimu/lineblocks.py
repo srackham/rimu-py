@@ -21,8 +21,8 @@ class Def:
                  match: Pattern[str],
                  replacement: str = '',
                  name: str = '',
-                 verify: Verify = None,
-                 filter: Filter = None,
+                 verify: Optional[Verify] = None,
+                 filter: Optional[Filter] = None,
                  ) -> None:
         self.match = match
         self.replacement = replacement
@@ -190,7 +190,7 @@ defs: List[Def] = [
 ]
 
 
-def render(reader: io.Reader, writer: io.Writer, allowed: List[str] = None) -> bool:
+def render(reader: io.Reader, writer: io.Writer, allowed: Optional[List[str]] = None) -> bool:
     '''If the next element in the reader is a valid line block render it
        and return True, else return false.'''
     if allowed is None:

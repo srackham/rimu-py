@@ -14,7 +14,7 @@ class Def:
     def __init__(self,
                  match: Pattern[str],
                  replacement: str,
-                 filter: Filter = None,
+                 filter: Optional[Filter] = None,
                  ):
         self.match = match
         self.replacement = replacement
