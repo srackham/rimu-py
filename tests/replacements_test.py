@@ -23,6 +23,7 @@ def test_setDefinition():
     replacements.setDefinition(r'\\?<image:([^\s|]+?)>', '', 'foo')
     assert len(replacements.defs) == len(replacements.DEFAULT_DEFS)
     d = replacements.getDefinition(r'\\?<image:([^\s|]+?)>')
+    assert d is not None
     assert d.replacement == 'foo'
     assert d.match.flags & re.IGNORECASE == 0
     assert d.match.flags & re.MULTILINE == 0

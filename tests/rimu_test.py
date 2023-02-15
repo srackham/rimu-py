@@ -4,7 +4,7 @@ import rimu
 from rimu import options
 
 
-def unexpectedError(_, message):
+def unexpectedError(message: options.CallbackMessage) -> None:
     raise Exception(f'unexpected callback: {message}')
 
 

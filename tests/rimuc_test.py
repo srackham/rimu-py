@@ -1,6 +1,7 @@
 import io
 import json
 import sys
+from typing import Union
 
 import pytest
 
@@ -11,9 +12,10 @@ from rimu import document
 def execRimuc(capsys, monkeypatch=None, args=[], input=''):
     document.init()
     sys.argv = ['rimuc', '--no-rimurc'] + args
-    exitcode = 0
+    exitcode: Union[str, int, None] = 0
     if input != '':
         # Inject stdin.
+        assert monkeypatch is not None
         monkeypatch.setattr('sys.stdin', io.StringIO(input))
     try:
         rimuc.main()

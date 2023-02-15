@@ -1,10 +1,12 @@
-from rimu import blockattributes, io, quotes, replacements
+from rimu import blockattributes
 from rimu import delimitedblocks as b
+from rimu import io, quotes, replacements
 
 
 def test_getDefinition():
     b.init()
     d = b.getDefinition('paragraph')
+    assert d is not None
     assert d.openTag == '<p>'
     d = b.getDefinition('foo')
     assert d is None
@@ -14,6 +16,7 @@ def test_setDefinition():
     b.init()
     b.setDefinition('indented', '<foo>|</foo>')
     d = b.getDefinition('indented')
+    assert d is not None
     assert d.openTag == '<foo>'
     assert d.closeTag == '</foo>'
 

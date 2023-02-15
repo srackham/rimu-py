@@ -17,6 +17,7 @@ def replaceMatch(match: Match, replacement: str, expand: Optional[Expand] = None
         expand = Expand()
 
     def repl(m):
+        assert expand is not None
         # Replace $1, $2 ... with corresponding match groups.
         if m[1] == '$$':
             expand.spans = True

@@ -23,12 +23,14 @@ def test_setDefinition():
         quote="*", openTag="<strong>", closeTag="</strong>", spans=True))
     assert len(quotes.defs) == len(quotes.DEFAULT_DEFS)
     d = quotes.getDefinition('*')
+    assert d is not None
     assert d.openTag == '<strong>'
 
     quotes.setDefinition(
         quotes.Def(quote="x", openTag="<del>", closeTag="</del>", spans=True))
     assert len(quotes.defs) == len(quotes.DEFAULT_DEFS) + 1
     d = quotes.getDefinition('x')
+    assert d is not None
     assert d.openTag == '<del>'
     assert quotes.defs[-1].openTag == '<del>'
 
@@ -36,6 +38,7 @@ def test_setDefinition():
         quotes.Def(quote="xx", openTag="<u>", closeTag="</u>", spans=True))
     assert len(quotes.defs) == len(quotes.DEFAULT_DEFS) + 2
     d = quotes.getDefinition('xx')
+    assert d is not None
     assert d.openTag == '<u>'
     assert quotes.defs[0].openTag == '<u>'
 
