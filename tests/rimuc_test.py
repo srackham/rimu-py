@@ -1,7 +1,7 @@
 import io
 import json
 import sys
-from typing import Union
+from typing import Any, Tuple, Union
 
 import pytest
 
@@ -9,7 +9,7 @@ import rimuc
 from rimu import document
 
 
-def execRimuc(capsys, monkeypatch=None, args=[], input=''):
+def execRimuc(capsys, monkeypatch=None, args=[], input='') -> Tuple[Any, Union[str, int, None]]:
     document.init()
     sys.argv = ['rimuc', '--no-rimurc'] + args
     exitcode: Union[str, int, None] = 0

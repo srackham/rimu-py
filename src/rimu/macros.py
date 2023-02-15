@@ -1,5 +1,5 @@
 import re
-from typing import List, Optional
+from typing import Any, List, Optional, Type
 
 from rimu import options, spans
 
@@ -69,7 +69,7 @@ def render(text: str, silent: bool = False) -> str:
     MATCH_SIMPLE = re.compile(r'\\?{([\w\-]+)()}')  # Simple macro invocation.
     result = text
     for find in [MATCH_SIMPLE, MATCH_COMPLEX]:
-        def repl(match):
+        def repl(match: Any) -> str:
             if match[0].startswith('\\'):
                 return match[0][1:]
             params = match[2]

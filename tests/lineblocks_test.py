@@ -3,7 +3,7 @@ from typing import Dict
 from rimu import document, io, lineblocks
 
 
-def test_render():
+def test_render() -> None:
     tests: Dict[str, str] = {
         r'# foo': r'<h1>foo</h1>',
         r'// foo': r'',
