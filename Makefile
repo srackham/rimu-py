@@ -97,6 +97,11 @@ clean:
 install:
 	python -m pip install --ignore-installed $(BIN_DIST)
 
+.PHONY: dev-install
+# Install local editable install (https://pip.pypa.io/en/stable/topics/local-project-installs/)
+dev-install:
+	python -m pip install --ignore-installed --editable .
+
 .PHONY: uninstall
 uninstall:
 	python -m pip uninstall -y rimu
