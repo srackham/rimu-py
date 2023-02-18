@@ -66,7 +66,6 @@ dependencies:
       - requests-toolbelt==0.10.1
       - rfc3986==2.0.0
       - rich==13.3.1
-      - rimu==11.4.2
       - secretstorage==3.3.3
       - six==1.16.0
       - tomli==2.0.1
