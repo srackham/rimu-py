@@ -7,7 +7,7 @@ from typing import List, Optional
 import rimu
 import rimuc
 
-VERSION = '11.4.2a0'    # Version number conforms to Python PEP 440.
+VERSION = '11.4.2'    # Version number conforms to Python PEP 440.
 NAME = 'rimupy'
 HOME_DIR = os.path.expanduser('~')
 RIMURC = os.path.join(HOME_DIR, '.rimurc')
