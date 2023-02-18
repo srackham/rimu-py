@@ -1,8 +1,8 @@
 This log contains Python specific changes, the [full change
 log](https://srackham.github.io/rimu/changelog.html) is on the Rimu website.
 
-<!-- ## 11.4.2
-- Updated the build environment from Python 3.8 to Python 3.10 (the rimu-py package itself remains compatible with Python 3.8 and up). -->
+## 11.4.2
+- Updated the build environment from Python 3.8 to Python 3.10 (the rimu-py package itself remains compatible with Python 3.8 and up).
 
 ## 11.4.1
 - Moved the development environment from a Docker container to a Conda virtual environment (this eliminates the need for Docker and having to develop remotely in a Docker container).
